@@ -1,0 +1,37 @@
+<div class="cadastro-container">
+  <h2>Cadastro de Cliente</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label for="documento">Documento</label>
+      <input id="documento" formControlName="documento" (input)="onDocumentoInput($event)" maxlength="14" placeholder="000.000.000-00" />
+      <small *ngIf="form.get('documento')?.hasError('required') && form.get('documento')?.touched">Documento é obrigatório</small>
+      <small *ngIf="form.get('documento')?.hasError('invalidCpfLength') && form.get('documento')?.touched">CPF inválido (deve conter 11 dígitos)</small>
+    </div>
+
+    <div class="field">
+      <label for="nome">Nome</label>
+      <input id="nome" formControlName="nome" />
+      <small *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched">Nome é obrigatório</small>
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" formControlName="email" />
+      <small *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Email inválido</small>
+    </div>
+
+    <div class="field">
+      <label for="tipo">Tipo de Cliente</label>
+      <select id="tipo" formControlName="tipo">
+        <option [ngValue]="null" disabled>Selecione</option>
+        <option *ngFor="let t of tipos; let i = index" [ngValue]="i">{{ t }}</option>
+      </select>
+      <small *ngIf="form.get('tipo')?.invalid && form.get('tipo')?.touched">Selecione o tipo</small>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">Salvar</button>
+    </div>
+  </form>
+</div>

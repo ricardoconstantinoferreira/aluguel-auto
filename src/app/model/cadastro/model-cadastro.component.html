@@ -1,0 +1,36 @@
+<div class="cadastro-container">
+  <h2>Cadastro de Modelo</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="field">
+      <label for="descricao">Descrição</label>
+      <input id="descricao" formControlName="descricao" />
+      <small *ngIf="form.get('descricao')?.invalid && form.get('descricao')?.touched">Descrição é obrigatória</small>
+    </div>
+
+    <div class="field">
+      <label for="ano">Ano</label>
+      <input id="ano" type="number" formControlName="ano" />
+      <small *ngIf="form.get('ano')?.invalid && form.get('ano')?.touched">Ano inválido</small>
+    </div>
+
+    <div class="field">
+      <label for="carmaker">Montadora</label>
+      <select id="carmaker" formControlName="carmakerId">
+        <option [ngValue]="null" disabled>Selecione</option>
+        <option *ngFor="let c of carmakers" [ngValue]="c.id">{{ c.descricao }}</option>
+      </select>
+      <small *ngIf="form.get('carmakerId')?.invalid && form.get('carmakerId')?.touched">Selecione a montadora</small>
+    </div>
+
+    <div class="field">
+      <label for="imagem">Imagem do Modelo</label>
+      <input id="imagem" type="file" (change)="onFileSelected($event)" accept="image/*" />
+      <div *ngIf="previewUrl" class="preview"><img [src]="previewUrl" alt="Preview" /></div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="form.invalid">Salvar</button>
+    </div>
+  </form>
+</div>

@@ -62,7 +62,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ferreira-auto:build"
+            "browserTarget": "ferreira-auto:build",
+            "proxyConfig": "src/proxy.config.js"
           },
           "configurations": {
             "production": {
@@ -119,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ferreira-auto"
+    }
+  },
+  "defaultProject": "ferreira-auto",
+  "cli": {
+    "analytics": "73388d57-cece-4c0b-8c49-a10b8a62a0e0"
+  }
 }
