@@ -10,7 +10,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ModelCadastroComponent],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes), ModelCadastroComponent]
 })
 export class ModelModule { }

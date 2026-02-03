@@ -5,7 +5,6 @@ import { ResetPasswordRoutingModule } from './reset-password-routing.module';
 import { ResetPasswordComponent } from './reset-password.component';
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, ResetPasswordRoutingModule],
-  declarations: [ResetPasswordComponent]
+  imports: [CommonModule, ReactiveFormsModule, ResetPasswordRoutingModule, ResetPasswordComponent]
 })
 export class ResetPasswordModule { }

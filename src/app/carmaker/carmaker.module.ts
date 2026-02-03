@@ -10,7 +10,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [CarmakerCadastroComponent],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)]
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(routes),
+    CarmakerCadastroComponent
+  ]
 })
 export class CarmakerModule { }

@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CarmakerService } from '../carmaker.service';
 
 @Component({
   selector: 'app-carmaker-cadastro',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './carmaker-cadastro.component.html',
   styleUrls: ['./carmaker-cadastro.component.css']
 })
@@ -21,7 +24,8 @@ export class CarmakerCadastroComponent {
       return;
     }
 
-    const payload = { ...this.form.value };
+    const descricao = this.form.value.descricao ?? '';
+    const payload = { descricao };
 
     this.service.create(payload).subscribe({
       next: () => {

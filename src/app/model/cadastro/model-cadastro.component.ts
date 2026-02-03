@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarmakerService, Carmaker } from 'src/app/carmaker/carmaker.service';
 import { ModelService } from '../model.service';
 
 @Component({
   selector: 'app-model-cadastro',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './model-cadastro.component.html',
   styleUrls: ['./model-cadastro.component.css']
 })

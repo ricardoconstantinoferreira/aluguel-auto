@@ -62,19 +62,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ferreira-auto:build",
+            "buildTarget": "ferreira-auto:build",
             "proxyConfig": "src/proxy.config.js"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ferreira-auto:build:production"
+              "buildTarget": "ferreira-auto:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ferreira-auto:build"
+            "buildTarget": "ferreira-auto:build"
           }
         },
         "test": {
@@ -122,7 +122,6 @@
       }
     }
   },
-  "defaultProject": "ferreira-auto",
   "cli": {
     "analytics": "73388d57-cece-4c0b-8c49-a10b8a62a0e0"
   }

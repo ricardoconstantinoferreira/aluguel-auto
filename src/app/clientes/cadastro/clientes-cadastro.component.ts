@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientesService } from '../clientes.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clientes-cadastro',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './clientes-cadastro.component.html',
   styleUrls: ['./clientes-cadastro.component.css']
 })
