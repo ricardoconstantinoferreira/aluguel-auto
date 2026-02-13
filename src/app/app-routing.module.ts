@@ -5,6 +5,10 @@ import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { 
+    path: '', 
+    loadChildren: () => import('./auth/login.module').then(m => m.LoginModule) 
+  },
+  { 
     path: 'login', 
     loadChildren: () => import('./auth/login.module').then(m => m.LoginModule) 
   },
@@ -25,6 +29,10 @@ const routes: Routes = [
   { 
     path: 'clientes', 
     loadChildren: () => import('./clientes/clientes.module').then(m => m.ClientesModule),
+  },
+  { 
+    path: 'buy', 
+    loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule),
     canActivate: [AuthGuard]
   }
 ];
