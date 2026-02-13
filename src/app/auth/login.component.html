@@ -16,3 +16,11 @@
     <button type="submit" [disabled]="form.invalid">Entrar</button>
   </form>
 </div>
+
+<div class="modal-backdrop" *ngIf="showErrorModal" (click)="closeErrorModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>Erro ao autenticar</h3>
+    <p>{{ errorMessage }}</p>
+    <button type="button" (click)="closeErrorModal()">Fechar</button>
+  </div>
+</div>

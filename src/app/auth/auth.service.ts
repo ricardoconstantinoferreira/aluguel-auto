@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -9,7 +9,9 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private customerTypeKey = 'customer_type';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
   login(email: string, password: string): Observable<any> {
     const uri = 'api/auto/auth/login';

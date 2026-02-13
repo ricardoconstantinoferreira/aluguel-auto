@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  returnUrl: string | undefined;
+  showErrorModal = false;
+  errorMessage = 'Email ou senha inválidos';
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -22,18 +23,22 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
-  }
+    private router: Router
+  ) {}
 
   onSubmit() {
     if (this.form.invalid) return;
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigateByUrl(this.returnUrl || '/'),
-      error: err => alert('Erro ao autenticar: ' + (err?.error?.message || err?.message || ''))
+      next: () => this.router.navigateByUrl('/buy/comprar-carros'),
+      error: err => {
+        this.errorMessage = err?.error?.message || 'Email ou senha inválidos';
+        this.showErrorModal = true;
+      }
     });
+  }
+
+  closeErrorModal() {
+    this.showErrorModal = false;
   }
 }

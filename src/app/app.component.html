@@ -403,6 +403,10 @@
         </ul>
       </li>
 
+      <li class="nav-item" *ngIf="authService.isLoggedIn">
+        <a role="menuitem" routerLink="/buy/comprar-carros">Comprar carros</a>    
+      </li>
+
        <li class="nav-item" *ngIf="authService.isLoggedIn">
         <a class="nav-link" routerLink="/" (click)="logout()" title="Logar">Sair</a>
       </li>
