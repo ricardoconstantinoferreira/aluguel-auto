@@ -29,6 +29,14 @@
             "scripts": []
           },
           "configurations": {
+            "development": {
+              "optimization": false,
+              "buildOptimizer": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -38,7 +46,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -57,19 +65,24 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "ferreira-auto:build",
+            "buildTarget": "ferreira-auto:build:development",
             "proxyConfig": "src/proxy.config.js"
           },
           "configurations": {
+            "development": {
+              "buildTarget": "ferreira-auto:build:development"
+            },
             "production": {
               "buildTarget": "ferreira-auto:build:production"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

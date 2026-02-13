@@ -377,25 +377,34 @@
   </a>
   <nav class="nav" role="navigation">
     <ul class="nav-list">
-      <li class="nav-item dropdown">
-        <p class="nav-link">Cliente ▾</p>
-        <ul class="dropdown-menu" role="menu">
-          <li role="none"><a role="menuitem" routerLink="/clientes/cadastro">Cadastro de clientes</a></li>
-        </ul>
+      <li class="nav-item" *ngIf="!authService.isLoggedIn">
+        <a class="nav-link" routerLink="/login" title="Logar">Logar</a>
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item" *ngIf="!authService.isLoggedIn">
+        <a role="menuitem" routerLink="/clientes/cadastro">Cadastre-se</a>    
+      </li>
+
+      <li class="nav-item" *ngIf="authService.isLoggedIn">
+        <a role="menuitem" routerLink="/endereco/cadastro">Cadastre seu endereço</a>    
+      </li>
+
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn">
         <p class="nav-link">Montadora ▾</p>
         <ul class="dropdown-menu" role="menu">
           <li role="none"><a role="menuitem" routerLink="/carmaker/cadastro">Cadastro de montadoras</a></li>
         </ul>
       </li>
 
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn">
         <p class="nav-link">Modelo ▾</p>
         <ul class="dropdown-menu" role="menu">
           <li role="none"><a role="menuitem" routerLink="/model/cadastro">Cadastro de modelos</a></li>
         </ul>
+      </li>
+
+       <li class="nav-item" *ngIf="authService.isLoggedIn">
+        <a class="nav-link" routerLink="/" (click)="logout()" title="Logar">Sair</a>
       </li>
     </ul>
   </nav>  </div>
