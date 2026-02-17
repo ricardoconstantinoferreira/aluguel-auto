@@ -9,7 +9,69 @@
     </div>
 
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid">Salvar</button>
+      <button type="submit" [disabled]="form.invalid">{{ editingId !== null ? 'Atualizar' : 'Salvar' }}</button>
+      <button type="button" class="btn-cancelar" *ngIf="editingId !== null" (click)="cancelEdit()">Cancelar</button>
     </div>
   </form>
+</div>
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>{{ modalTitle }}</h3>
+    <p>{{ modalMessage }}</p>
+    <button type="button" (click)="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showDeleteConfirmModal" (click)="closeDeleteConfirmModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>Confirmar exclusão</h3>
+    <p>
+      Deseja realmente deletar a montadora
+      <strong>"{{ pendingDeleteItem?.description || pendingDeleteItem?.descricao }}"</strong>?
+    </p>
+    <div class="modal-actions">
+      <button type="button" class="btn-modal-cancel" (click)="closeDeleteConfirmModal()">Cancelar</button>
+      <button type="button" class="btn-modal-delete" (click)="confirmDelete()">Deletar</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Lista de Montadoras</h2>
+
+  <div class="table-wrapper">
+    <table class="carmaker-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th class="actions-header">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of pagedDate; track item.id) {
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.description || item.descricao }}</td>
+            <td class="actions-column">
+              <button type="button" class="btn-editar" (click)="onEdit(item)">Editar</button>
+              <button type="button" class="btn-deletar" (click)="onDelete(item)">Deletar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="paginator-wrapper">
+    <mat-paginator 
+      class="table-paginator"
+      [length]="totalItems" 
+      [pageSize]="pageSize" 
+      [pageSizeOptions]="[5, 10, 20]" 
+      (page)="onPageChange($event)"
+      aria-label="Selecionar Página">
+    </mat-paginator>
+  </div>
 </div>

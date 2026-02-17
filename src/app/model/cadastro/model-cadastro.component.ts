@@ -29,7 +29,7 @@ export class ModelCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.carmakerService.getAll().subscribe(data => this.carmakers = data);
+    // this.carmakerService.getAll().subscribe(data => this.carmakers = data);
     // ensure we have latest data
     this.carmakerService.refresh();
   }
