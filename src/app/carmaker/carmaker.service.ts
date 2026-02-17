@@ -16,22 +16,17 @@ export class CarmakerService {
     this.refresh();
   }
 
-  getAll(): Observable<Carmaker[]> {
-    return this.carmakers$.asObservable();
-  }
-
   refresh(): void {
     const uri = '/api/auto/carmaker';
     this.http.get<Carmaker[]>(uri).pipe(catchError(() => of([]))).subscribe(list => this.carmakers$.next(list));
   }
 
-  // backward-compatible direct list call
   list(): Observable<Carmaker[]> {
     const uri = '/api/auto/carmaker';
     return this.http.get<Carmaker[]>(uri).pipe(catchError(() => of([])));
   }
 
-  create(payload: { descricao: string }): Observable<any> {
+  create(payload: { description: string }): Observable<any> {
     const uri = '/api/auto/carmaker';
     const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' } };
     return this.http.post<Carmaker>(uri, payload, options).pipe(
@@ -43,6 +38,22 @@ export class CarmakerService {
           this.refresh();
         }
       })
+    );
+  }
+
+  update(id: number, payload: { description: string }): Observable<any> {
+    const uri = `/api/auto/carmaker/${id}`;
+    const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' } };
+    return this.http.put<Carmaker>(uri, payload, options).pipe(
+      tap(() => this.refresh())
+    );
+  }
+
+  delete(id: number): Observable<any> {
+    const uri = `/api/auto/carmaker/${id}`;
+    const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' } };
+    return this.http.delete<void>(uri, options).pipe(
+      tap(() => this.refresh())
     );
   }
 }
