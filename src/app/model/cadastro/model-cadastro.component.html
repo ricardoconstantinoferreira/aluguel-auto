@@ -9,6 +9,12 @@
     </div>
 
     <div class="field">
+      <label for="preco">Preço do Aluguel</label>
+      <input id="preco" formControlName="preco" inputmode="decimal" (input)="onPriceInput($event)" />
+      <small *ngIf="form.get('preco')?.invalid && form.get('preco')?.touched">Preço é obrigatório</small>
+    </div>
+
+    <div class="field">
       <label for="ano">Ano</label>
       <input id="ano" type="number" formControlName="ano" />
       <small *ngIf="form.get('ano')?.invalid && form.get('ano')?.touched">Ano inválido</small>
