@@ -29,7 +29,7 @@ export class ModelCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.carmakerService.getAll().subscribe(data => this.carmakers = data);
+    this.carmakerService.list().subscribe(data => this.carmakers = data);
     // ensure we have latest data
     this.carmakerService.refresh();
   }
@@ -51,11 +51,13 @@ export class ModelCadastroComponent implements OnInit {
     }
 
     const { descricao, ano, carmakerId } = this.form.value;
+    const descricaoValue = (descricao ?? '').toString().trim();
     const fd = new FormData();
-    fd.append('descricao', descricao);
-    fd.append('ano', String(ano));
+    fd.append('description', descricaoValue);
+    fd.append('year', String(ano));
     fd.append('carmakerId', String(carmakerId));
-    if (this.selectedFile) fd.append('imagem', this.selectedFile, this.selectedFile.name);
+    fd.append('active', Boolean(true).toString());
+    if (this.selectedFile) fd.append('image', this.selectedFile, this.selectedFile.name);
 
     this.modelService.create(fd).subscribe({
       next: () => {
