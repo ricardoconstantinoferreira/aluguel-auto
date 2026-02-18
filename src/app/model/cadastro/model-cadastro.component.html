@@ -2,6 +2,7 @@
   <h2>Cadastro de Modelo</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="hidden" formControlName="id" />
     <div class="field">
       <label for="descricao">Descrição</label>
       <input id="descricao" formControlName="descricao" />

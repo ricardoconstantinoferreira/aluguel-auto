@@ -17,6 +17,7 @@ export class ModelCadastroComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
 
   form = this.fb.group({
+    id: ['', []],
     descricao: ['', [Validators.required]],
     preco: ['', [Validators.required]],
     ano: [new Date().getFullYear(), [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
@@ -33,6 +34,7 @@ export class ModelCadastroComponent implements OnInit {
     this.carmakerService.list().subscribe(data => this.carmakers = data);
     // ensure we have latest data
     this.carmakerService.refresh();
+    this.loadPrefillFromState();
   }
 
   onFileSelected(event: Event) {
@@ -71,13 +73,13 @@ export class ModelCadastroComponent implements OnInit {
       return;
     }
 
-    const { descricao, ano, carmakerId, preco } = this.form.value;
+    const { id, descricao, ano, carmakerId, preco } = this.form.value;
     const descricaoValue = (descricao ?? '').toString().trim();
     const fd = new FormData();
+    if (id) fd.append('id', String(id));
     fd.append('description', descricaoValue);
     fd.append('year', String(ano));
     fd.append('carmakerId', String(carmakerId));
-    // fd.append('price', this.formatPriceForSpring(preco as string));
     fd.append('price', String(preco).replace(/\./g, '').replace(',', '.'));
     fd.append('active', Boolean(true).toString());
     if (this.selectedFile) fd.append('image', this.selectedFile, this.selectedFile.name);
@@ -91,5 +93,32 @@ export class ModelCadastroComponent implements OnInit {
       },
       error: err => alert('Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''))
     });
+  }
+
+  private loadPrefillFromState() {
+    const state = (history.state || {}) as any;
+    const prefill = state?.prefillModel;
+    if (!prefill) return;
+
+    this.form.patchValue({
+      id: prefill.id ?? '',
+      descricao: prefill.descricao || prefill.description || '',
+      preco: this.formatPriceForDisplay(prefill.preco ?? prefill.price ?? ''),
+      ano: Number(prefill.ano ?? prefill.year ?? new Date().getFullYear()),
+      carmakerId: prefill.carmakerId ?? prefill.carmaker?.id ?? null
+    });
+  }
+
+  private formatPriceForDisplay(price: any): string {
+    if (price === null || price === undefined || price === '') return '';
+
+    if (typeof price === 'number') {
+      return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    const normalized = String(price).trim().replace(/\./g, '').replace(',', '.');
+    const parsed = Number(normalized);
+    if (!Number.isFinite(parsed)) return String(price);
+    return parsed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 }
