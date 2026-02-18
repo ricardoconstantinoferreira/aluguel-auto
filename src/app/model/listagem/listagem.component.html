@@ -1,3 +1,22 @@
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <h3>{{ modalTitle }}</h3>
+        <p>{{ modalMessage }}</p>
+        <button type="button" (click)="closeModal()">Fechar</button>
+    </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showDeleteConfirmModal" (click)="closeDeleteConfirmModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+        <h3>Confirmar inativação</h3>
+        <p>Tem certeza que deseja inativar o registro?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-modal-cancel" (click)="closeDeleteConfirmModal()">Cancelar</button>
+            <button type="button" class="btn-modal-delete" (click)="confirmInactivate()">Inativar</button>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <h2>Lista de Modelos</h2>
     
@@ -9,27 +28,38 @@
             <th>Descrição</th>
             <th>Ano</th>
             <th>Montadora</th>
+            <th>Carro</th>
+            <th class="actions-header">Ações</th>
             </tr>
         </thead>
-        <!-- <tbody>
+        <tbody>
             @for (item of pagedDate; track item.id) {
             <tr>
                 <td>{{ item.id }}</td>
                 <td>{{ item.description || item.descricao }}</td>
                 <td>{{ item.year || item.ano }}</td>
-                <td>{{ item.carmakerDescription || item.montadoraDescricao }}</td>
+                <td>{{ item.carmaker.description || item.carmaker.descricao }}</td>
+                <td>
+                    <img [src]="'http://localhost:8080/' + item.image" alt="Imagem do modelo" width="65px" height="50px" class="model-image" />
+                </td>            
+                <td class="actions-column">
+                  <button type="button" class="btn-editar" (click)="onEdit(item)">Alterar</button>
+                  <button type="button" class="btn-inativar" (click)="onInactivate(item)">Inativar</button>
+                </td>
             </tr>
             }
-        </tbody> -->
+        </tbody>
         </table>
     </div>
     
-    <!-- <div class="paginator-wrapper">
+    <div class="paginator-wrapper">
         <mat-paginator
+        class="table-paginator"
         [length]="totalItems"
         [pageSize]="pageSize"
         [pageSizeOptions]="[5, 10, 20]"
         (page)="onPageChange($event)"
+        aria-label="Selecionar Página"
         ></mat-paginator>
-    </div> -->
+    </div>
 </div>
