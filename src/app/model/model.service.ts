@@ -18,8 +18,14 @@ export class ModelService {
   }
 
   inactivate(id: number): Observable<any> {
-    const uri = `/api/auto/model/${id}/inactive`;
+    const uri = `/api/auto/model/inactivate/${id}`;
     const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' } };
-    return this.http.patch(uri, {}, options);
+    return this.http.put(uri, {}, options);
+  }
+
+  activate(id: number): Observable<any> {
+    const uri = `/api/auto/model/activate/${id}`;
+    const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' } };
+    return this.http.put(uri, {}, options);
   }
 }

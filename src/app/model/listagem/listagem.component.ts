@@ -2,10 +2,12 @@ import { AfterViewInit, Component } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ModelService } from '../model.service';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-listagem',
-  imports: [MatPaginator],
+  imports: [CommonModule, ReactiveFormsModule, MatPaginator],
   templateUrl: './listagem.component.html',
   styleUrls: ['./listagem.component.css']
 })
@@ -37,7 +39,6 @@ export class ListagemComponent implements AfterViewInit {
       this.allData = data;
       this.totalItems = this.allData.length;
       this.pagedDate = this.allData.slice(offset, limit);
-      debugger;
     });
   }
 
@@ -64,6 +65,16 @@ export class ListagemComponent implements AfterViewInit {
   onInactivate(item: any) {
     this.pendingDeleteItem = item;
     this.showDeleteConfirmModal = true;
+  }
+
+  onActivate(item: any) {
+    this.service.activate(item.id).subscribe({
+      next: () => {
+        this.openModal('Sucesso','Registro ativado com sucesso');
+        this.updatePagedData();
+      },
+      error: err => this.openModal('Erro ao ativar', err?.error?.message || err?.message || 'Erro ao ativar registro')
+    });
   }
 
   confirmInactivate() {
