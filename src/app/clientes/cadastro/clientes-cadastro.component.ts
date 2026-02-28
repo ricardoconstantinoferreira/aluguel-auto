@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./clientes-cadastro.component.css']
 })
 export class ClientesCadastroComponent {
-  tipos = ['Usuário', 'Cliente Comum', 'Cliente Empresa'];
+  tipos = ['Usuário', 'Cliente Comum'];
 
   cpfValidator = (control: AbstractControl) => {
     const raw = (control.value || '').toString().replace(/\D/g, '');

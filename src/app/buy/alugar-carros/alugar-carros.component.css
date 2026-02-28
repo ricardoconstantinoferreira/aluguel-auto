@@ -1,0 +1,29 @@
+.cars-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+    margin-left: 5%;
+}
+
+.car-card {
+	width: 300px;
+}
+
+.paginator-wrapper {
+	margin-top: 16px;
+	display: flex;
+	justify-content: center;
+}
+
+.btn-alugar {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-alugar:hover {
+  background-color: #0056b3;
+}

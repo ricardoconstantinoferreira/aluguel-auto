@@ -51,10 +51,10 @@ export class ResetPasswordComponent {
 
     this.resetService.resetPassword(id, password, confirmPassword).subscribe({
       next: () => {
-        alert('Senha alterada com sucesso');
+        alert('Senha cadastrada com sucesso');
         this.router.navigate(['/login']);
       },
-      error: err => alert('Erro ao alterar senha: ' + (err?.error?.message || err?.message || ''))
+      error: err => alert('Erro ao cadastrar senha: ' + (err?.error?.message || err?.message || ''))
     });
   }
 }

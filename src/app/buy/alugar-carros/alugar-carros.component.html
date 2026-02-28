@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="cars-grid">
+        @for (item of pagedDate; track item.id) {
+            <div class="car-card">
+                <img [src]="'http://localhost:8080/' + item.image" alt="Imagem do carro" width="300px" height="170px" class="car-image" />
+                <div class="car-details">
+                    <h3>{{ item.description || item.descricao }}</h3>
+                    <p>Ano: {{ item.year || item.ano }}</p>
+                    <p>Montadora: {{ item.carmaker.description || item.carmaker.descricao }}</p>
+                    <p>Preço: {{ item.price || item.preco }}</p>
+                    <button type="button" class="btn-alugar">Alugar</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="paginator-wrapper">
+        <mat-paginator
+        class="table-paginator"
+        [length]="totalItems"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5, 10, 20]"
+        (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</div>

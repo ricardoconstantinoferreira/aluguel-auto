@@ -30,7 +30,7 @@ export class LoginComponent {
     if (this.form.invalid) return;
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigateByUrl('/buy/comprar-carros'),
+      next: () => this.router.navigateByUrl('/buy/alugar-carros'),
       error: err => {
         this.errorMessage = err?.error?.message || 'Email ou senha inválidos';
         this.showErrorModal = true;
