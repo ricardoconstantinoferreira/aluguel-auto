@@ -27,3 +27,65 @@
 .btn-alugar:hover {
   background-color: #0056b3;
 }
+
+.modal-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.modal-box {
+	width: 100%;
+	max-width: 380px;
+	background: #fff;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	padding: 20px;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.modal-box h3 {
+	margin: 0 0 10px;
+	color: #2F4F7F;
+}
+
+.modal-box p {
+	margin: 0 0 16px;
+	color: #333;
+}
+
+.modal-box button {
+	padding: 8px 12px;
+	border: none;
+	border-radius: 4px;
+	background: #2F4F7F;
+	color: #fff;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.modal-box button:hover {
+	background: #264268;
+}
+
+.modal-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+}
+
+.btn-modal-close {
+	min-width: 88px;
+}
+
+.btn-modal-cancel {
+	background: #607d8b;
+}
+
+.btn-modal-delete {
+	background: #d32f2f;
+}
