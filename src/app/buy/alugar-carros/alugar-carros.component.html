@@ -8,7 +8,7 @@
                     <p>Ano: {{ item.year || item.ano }}</p>
                     <p>Montadora: {{ item.carmaker.description || item.carmaker.descricao }}</p>
                     <p>Preço: {{ item.price || item.preco }}</p>
-                    <button type="button" class="btn-alugar">Alugar</button>
+                    <button type="button" class="btn-alugar" (click)="rent(item)">Alugar</button>
                 </div>
             </div>
         }
@@ -23,4 +23,14 @@
         (page)="onPageChange($event)">
         </mat-paginator>
     </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>{{ modalTitle }}</h3>
+    <p>{{ modalMessage }}</p>
+        <div class="modal-actions">
+            <button type="button" class="btn-modal-close" (click)="closeModal()">Fechar</button>
+        </div>
+  </div>
 </div>

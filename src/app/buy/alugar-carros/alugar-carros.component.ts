@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -26,7 +27,7 @@ export class AlugarCarrosComponent implements AfterViewInit {
   pendingDeleteItem: any | null = null;
 
   constructor(
-    private service: ModelService, private router: Router
+    private service: ModelService, private router: Router, private http: HttpClient
   ){}
 
   ngAfterViewInit(): void {
@@ -48,5 +49,42 @@ export class AlugarCarrosComponent implements AfterViewInit {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
     this.updatePagedData();
+  }
+
+  rent(item: any): void {
+    let data = {
+      modelId: item.id,
+      customerId: localStorage.getItem('customer_id')
+    };
+    
+    const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' }, responseType: 'text' as 'json' }; 
+    this.http.post('api/auto/prerent', data, options).subscribe(
+      res => {
+
+        let qty = localStorage.getItem('cart_items');
+        if (qty) {
+          data['qty'] = parseInt(qty, 10) + 1;
+        } else {
+          data['qty'] = 1;
+        } 
+        localStorage.setItem('cart_items', data['qty'].toString());
+
+        this.router.navigate(['/buy/car-buy']);
+      },
+      err => {
+        let message = JSON.parse(err.error).message || 'Ocorreu um erro ao alugar o carro. Por favor, tente novamente.';
+        this.openModal('Carro não adicionado', message);
+      }
+    );
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  private openModal(title: string, message: string) {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.showModal = true;
   }
 }
