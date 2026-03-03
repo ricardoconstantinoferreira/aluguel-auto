@@ -32,12 +32,21 @@
 
     <div class="field">
       <label for="imagem">Imagem do Modelo</label>
-      <input id="imagem" type="file" (change)="onFileSelected($event)" accept="image/*" />
+      <input id="imagem" type="file" (change)="onFileSelected($event)" (blur)="form.get('imagem')?.markAsTouched()" accept="image/*" />
       <div *ngIf="previewUrl" class="preview"><img [src]="previewUrl" alt="Preview" /></div>
+      <small *ngIf="form.get('imagem')?.invalid && form.get('imagem')?.touched">Imagem é obrigatória</small>
     </div>
 
     <div class="actions">
-      <button type="submit" [disabled]="form.invalid">Salvar</button>
+      <button type="submit">Salvar</button>
     </div>
   </form>
+</div>
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>{{ modalTitle }}</h3>
+    <p>{{ modalMessage }}</p>
+    <button type="button" (click)="closeModal()">Fechar</button>
+  </div>
 </div>
