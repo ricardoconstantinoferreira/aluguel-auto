@@ -7,7 +7,7 @@
                     <h3>{{ item.description || item.descricao }}</h3>
                     <p>Ano: {{ item.year || item.ano }}</p>
                     <p>Montadora: {{ item.carmaker.description || item.carmaker.descricao }}</p>
-                    <p>Preço: {{ item.price || item.preco }}</p>
+                    <p>Preço: {{ (item.price || item.preco) | currency:'BRL':'symbol':'1.2-2' }}</p>
                     <button type="button" class="btn-alugar" (click)="rent(item)">Alugar</button>
                 </div>
             </div>

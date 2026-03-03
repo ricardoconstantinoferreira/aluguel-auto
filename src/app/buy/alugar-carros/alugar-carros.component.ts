@@ -5,12 +5,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ModelService } from 'src/app/model/model.service';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
 
 @Component({
   selector: 'app-alugar-carros',
   imports: [CommonModule, ReactiveFormsModule, MatPaginator],
   templateUrl: './alugar-carros.component.html',
-  styleUrl: './alugar-carros.component.css'
+  styleUrl: './alugar-carros.component.css',
+  providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 })
 export class AlugarCarrosComponent implements AfterViewInit {
 
@@ -32,6 +36,7 @@ export class AlugarCarrosComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.updatePagedData();
+    registerLocaleData(localePt);
   }
 
   updatePagedData() {

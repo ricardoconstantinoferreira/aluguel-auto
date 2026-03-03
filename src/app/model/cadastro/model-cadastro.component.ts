@@ -15,13 +15,18 @@ export class ModelCadastroComponent implements OnInit {
   carmakers: Carmaker[] = [];
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  showModal = false;
+  modalTitle = '';
+  modalMessage = '';
+  showDeleteConfirmModal = false;
 
   form = this.fb.group({
     id: ['', []],
     descricao: ['', [Validators.required]],
     preco: ['', [Validators.required]],
     ano: [new Date().getFullYear(), [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
-    carmakerId: [null, [Validators.required]]
+    carmakerId: [null, [Validators.required]],
+    imagem: ['', [Validators.required]]
   });
 
   constructor(
@@ -39,8 +44,21 @@ export class ModelCadastroComponent implements OnInit {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (!input.files || !input.files.length) return;
+    const imageControl = this.form.get('imagem');
+
+    if (!input.files || !input.files.length) {
+      this.selectedFile = null;
+      this.previewUrl = null;
+      imageControl?.setValue('');
+      imageControl?.markAsTouched();
+      imageControl?.updateValueAndValidity();
+      return;
+    }
+
     this.selectedFile = input.files[0];
+    imageControl?.setValue(this.selectedFile.name);
+    imageControl?.markAsTouched();
+    imageControl?.updateValueAndValidity();
 
     const reader = new FileReader();
     reader.onload = () => this.previewUrl = reader.result;
@@ -67,7 +85,22 @@ export class ModelCadastroComponent implements OnInit {
     input.value = formatted;
   }
 
+  closeModal() {
+    this.showModal = false;
+  }
+
+  private openModal(title: string, message: string) {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.showModal = true;
+  }
+
   onSubmit() {
+    if (!this.selectedFile) {
+      this.form.get('imagem')?.setErrors({ required: true });
+      this.form.get('imagem')?.markAsTouched();
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -86,12 +119,12 @@ export class ModelCadastroComponent implements OnInit {
 
     this.modelService.create(fd).subscribe({
       next: () => {
-        alert('Modelo cadastrado com sucesso');
+        this.openModal('Sucesso', 'Modelo cadastrado com sucesso');
         this.form.reset({ ano: new Date().getFullYear(), carmakerId: null });
         this.previewUrl = null;
         this.selectedFile = null;
       },
-      error: err => alert('Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''))
+      error: err => this.openModal('Erro', 'Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''))
     });
   }
 

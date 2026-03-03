@@ -3,12 +3,16 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/auth/auth.service';
 import { BuyService } from '../buy.service';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
 
 @Component({
   selector: 'app-car-buy',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './car-buy.component.html',
-  styleUrl: './car-buy.component.css'
+  styleUrl: './car-buy.component.css',
+  providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 })
 export class CarBuyComponent implements OnInit {
 
@@ -20,6 +24,8 @@ export class CarBuyComponent implements OnInit {
     this.buyService.getCartItems().subscribe(items => {
       this.allData = items as any[];
     }); 
+
+    registerLocaleData(localePt);
   }
 
   cartItemsCount(): number {
