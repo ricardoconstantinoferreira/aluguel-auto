@@ -13,6 +13,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ResetPasswordComponent {
   id: string | null = null;
+  showModal = false;
+  modalTitle = '';
+  modalMessage = '';
 
   form = this.fb.group({
     password: ['', [Validators.required, Validators.minLength(6)]],
@@ -34,6 +37,16 @@ export class ResetPasswordComponent {
     return p && cp && p === cp ? null : { passwordsMismatch: true };
   }
 
+  closeModal() {
+    this.showModal = false;
+  }
+
+  private openModal(title: string, message: string) {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.showModal = true;
+  }
+
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -45,16 +58,15 @@ export class ResetPasswordComponent {
     const id = this.id;
 
     if (!id) {
-      alert('ID ausente na query string');
+      this.openModal('Erro', 'ID ausente na query string');
       return;
     }
 
     this.resetService.resetPassword(id, password, confirmPassword).subscribe({
       next: () => {
-        alert('Senha cadastrada com sucesso');
         this.router.navigate(['/login']);
       },
-      error: err => alert('Erro ao cadastrar senha: ' + (err?.error?.message || err?.message || ''))
+      error: err => this.openModal('Erro', 'Erro ao cadastrar senha: ' + (err?.error?.message || err?.message || ''))
     });
   }
 }
