@@ -3,16 +3,21 @@ import { Component, Inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientesService } from '../clientes.service';
 import { Router } from '@angular/router';
+import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 
 @Component({
   selector: 'app-clientes-cadastro',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxLoadingModule],
   templateUrl: './clientes-cadastro.component.html',
   styleUrls: ['./clientes-cadastro.component.css']
 })
 export class ClientesCadastroComponent {
   tipos = ['Usuário', 'Cliente Comum'];
+  showModal = false;
+  modalTitle = '';
+  modalMessage = '';
+  loading = false;
 
   cpfValidator = (control: AbstractControl) => {
     const raw = (control.value || '').toString().replace(/\D/g, '');
@@ -52,12 +57,43 @@ export class ClientesCadastroComponent {
 
     const payload = { ...this.form.value, documento: (this.form.value.documento || '').replace(/\D/g, '') };
 
+    this.loading = true;
     this.service.create(payload).subscribe({
       next: () => {
-        alert('Cliente cadastrado com sucesso, você receberá um e-mail para cadastrar sua senha.');
-        this.router.navigate(['/clientes/cadastro']);
+        this.loading = false;
+        this.openModal('Sucesso', 'Cliente cadastrado com sucesso, você receberá um e-mail para cadastrar sua senha.');
+        this.form.reset();
       },
-      error: err => alert('Erro ao cadastrar: ' + (err?.error?.message || err?.message || ''))
+      error: err => {
+        this.loading = false;
+        const backendMessage = err?.error?.message || err?.message || '';
+        this.openModal('Erro', 'Erro ao cadastrar: ' + this.decodeBackendMessage(backendMessage));
+      }
     });
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
+  private openModal(title: string, message: string) {
+    this.modalTitle = title;
+    this.modalMessage = message;
+    this.showModal = true;
+  }
+
+  private decodeBackendMessage(message: string): string {
+    const text = (message || '').toString();
+
+    try {
+      const bytes = Array.from(text)
+        .map(char => `%${char.charCodeAt(0).toString(16).padStart(2, '0')}`)
+        .join('');
+
+      const decoded = decodeURIComponent(bytes);
+      return decoded.replace(/j�/g, 'já');
+    } catch {
+      return text.replace(/j�/g, 'já');
+    }
   }
 }
