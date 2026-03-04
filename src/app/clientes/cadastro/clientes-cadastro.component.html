@@ -34,4 +34,14 @@
       <button type="submit" [disabled]="form.invalid">Salvar</button>
     </div>
   </form>
+
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <h3>{{ modalTitle }}</h3>
+      <p>{{ modalMessage }}</p>
+      <button type="button" (click)="closeModal()">Fechar</button>
+    </div>
+  </div>
+
+  <ngx-loading [show]="loading" [config]="{ backdrop: true, primaryColour: '#2F4F7F', secondaryColour: '#000000', tertiaryColour: '#ffffff' }"></ngx-loading>
 </div>
