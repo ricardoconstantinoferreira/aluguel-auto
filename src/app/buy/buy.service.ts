@@ -25,4 +25,9 @@ export class BuyService {
         return this.http.delete(uri);
     }
 
+    sendOrder(allData) {
+        const uri = 'api/auto/order';
+        return this.http.post(uri, allData);    
+    }
+
 }
