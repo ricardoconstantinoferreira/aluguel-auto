@@ -31,7 +31,11 @@ export class EnderecoService {
   }
 
   getOrders(customerId: number): Observable<any> {
-    return this.http.get(`api/auto/order-items/${customerId}`);
+    return this.http.get(`api/auto/order/${customerId}`);
+  }
+
+  getOrderItems(orderId: number, customerId: number): Observable<any> {
+    return this.http.get(`api/auto/order-items/order/customer/${orderId}/${customerId}`);
   }
 
   lookupCep(cep: string): Observable<any> {
