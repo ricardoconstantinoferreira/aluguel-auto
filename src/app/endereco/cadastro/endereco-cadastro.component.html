@@ -1,0 +1,169 @@
+<section class="minha-conta-page">
+  <div class="minha-conta-shell">
+    <aside class="sidebar">
+      <h2>Minha Conta</h2>
+      <button type="button" [class.active]="selectedMenu === 'dados-pessoais'" (click)="selectMenu('dados-pessoais')">
+        Dados Pessoais
+      </button>
+      <button type="button" [class.active]="selectedMenu === 'dados-endereco'" (click)="selectMenu('dados-endereco')">
+        Dados de Endereco
+      </button>
+      <button type="button" [class.active]="selectedMenu === 'dados-pedidos'" (click)="selectMenu('dados-pedidos')">
+        Dados de Pedidos
+      </button>
+    </aside>
+
+    <main class="content-area">
+      <section *ngIf="selectedMenu === 'dados-pessoais'" class="section-card">
+        <h3>Dados Pessoais</h3>
+
+        <div class="field-list" *ngIf="!editingPersonal">
+          <p><strong>Documento:</strong> {{ personalForm.value.documento || '-' }}</p>
+          <p><strong>Nome:</strong> {{ customerName || '-' }}</p>
+          <p><strong>Email:</strong> {{ customerEmail || '-' }}</p>
+        </div>
+
+        <form [formGroup]="personalForm" *ngIf="editingPersonal">
+          <div class="field">
+            <label for="documento">Documento</label>
+            <input id="documento" formControlName="documento" maxlength="14" (input)="onDocumentoInput($event)" placeholder="000.000.000-00" />
+            <small *ngIf="personalForm.get('documento')?.hasError('required') && personalForm.get('documento')?.touched">Documento e obrigatorio</small>
+            <small *ngIf="personalForm.get('documento')?.hasError('invalidCpfLength') && personalForm.get('documento')?.touched">CPF invalido</small>
+          </div>
+
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input id="nome" formControlName="nome" />
+            <small *ngIf="personalForm.get('nome')?.invalid && personalForm.get('nome')?.touched">Nome e obrigatorio</small>
+          </div>
+
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" formControlName="email" />
+            <small *ngIf="personalForm.get('email')?.invalid && personalForm.get('email')?.touched">Email invalido</small>
+          </div>
+        </form>
+
+        <div class="actions">
+          <button type="button" class="btn-secondary" (click)="togglePasswordChange()">
+            {{ changingPassword ? 'Atualizar Senha' : 'Alterar Senha' }}
+          </button>
+          <button type="button" class="btn-primary" *ngIf="!editingPersonal" (click)="togglePersonalEdit()">Alterar Dados</button>
+          <button type="button" class="btn-primary" *ngIf="editingPersonal" (click)="submitPersonalData()">Atualizar Dados</button>
+        </div>
+
+        <form class="password-form" [formGroup]="passwordForm" *ngIf="changingPassword">
+          <div class="field">
+            <label for="senhaAtual">Senha Atual</label>
+            <input id="senhaAtual" type="password" formControlName="senhaAtual" />
+          </div>
+          <div class="field">
+            <label for="novaSenha">Nova Senha</label>
+            <input id="novaSenha" type="password" formControlName="novaSenha" />
+            <small *ngIf="passwordForm.get('novaSenha')?.hasError('minlength') && passwordForm.get('novaSenha')?.touched">Minimo de 6 caracteres</small>
+          </div>
+          <div class="field">
+            <label for="confirmarNovaSenha">Confirmar Nova Senha</label>
+            <input id="confirmarNovaSenha" type="password" formControlName="confirmarNovaSenha" />
+          </div>
+          <div class="actions">
+            <button type="button" class="btn-primary" (click)="submitPassword()">Atualizar Senha</button>
+          </div>
+        </form>
+      </section>
+
+      <section *ngIf="selectedMenu === 'dados-endereco'" class="section-card">
+        <h3>Dados de Endereco</h3>
+
+        <div *ngIf="hasAddress && !editingAddress" class="field-list">
+          <p><strong>CEP:</strong> {{ addressForm.value.cep || '-' }}</p>
+          <p><strong>Logradouro:</strong> {{ addressForm.value.logradouro || '-' }}</p>
+          <p><strong>Numero:</strong> {{ addressForm.value.numero || '-' }}</p>
+          <p><strong>Complemento:</strong> {{ addressForm.value.complemento || '-' }}</p>
+          <p><strong>Bairro:</strong> {{ addressForm.value.bairro || '-' }}</p>
+          <p><strong>Cidade:</strong> {{ addressForm.value.cidade || '-' }}</p>
+          <p><strong>Estado:</strong> {{ addressForm.value.estado || '-' }}</p>
+        </div>
+
+        <form [formGroup]="addressForm" *ngIf="!hasAddress || editingAddress">
+          <div class="field">
+            <label for="cep">CEP</label>
+            <input id="cep" formControlName="cep" maxlength="9" placeholder="99999-999" (input)="onCepInput($event)" (blur)="onCepBlur()" />
+            <small *ngIf="addressForm.get('cep')?.invalid && addressForm.get('cep')?.touched">CEP e obrigatorio</small>
+          </div>
+
+          <div class="field">
+            <label for="logradouro">Logradouro</label>
+            <input id="logradouro" formControlName="logradouro" />
+            <small *ngIf="addressForm.get('logradouro')?.invalid && addressForm.get('logradouro')?.touched">Logradouro e obrigatorio</small>
+          </div>
+
+          <div class="field">
+            <label for="numero">Numero</label>
+            <input id="numero" formControlName="numero" />
+            <small *ngIf="addressForm.get('numero')?.invalid && addressForm.get('numero')?.touched">Numero e obrigatorio</small>
+          </div>
+
+          <div class="field">
+            <label for="complemento">Complemento</label>
+            <input id="complemento" formControlName="complemento" />
+          </div>
+
+          <div class="field">
+            <label for="bairro">Bairro</label>
+            <input id="bairro" formControlName="bairro" />
+            <small *ngIf="addressForm.get('bairro')?.invalid && addressForm.get('bairro')?.touched">Bairro e obrigatorio</small>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="cidade">Cidade</label>
+              <input id="cidade" formControlName="cidade" />
+              <small *ngIf="addressForm.get('cidade')?.invalid && addressForm.get('cidade')?.touched">Cidade e obrigatoria</small>
+            </div>
+            <div class="field">
+              <label for="estado">UF</label>
+              <input id="estado" formControlName="estado" maxlength="2" />
+              <small *ngIf="addressForm.get('estado')?.invalid && addressForm.get('estado')?.touched">UF invalida</small>
+            </div>
+          </div>
+        </form>
+
+        <div class="actions">
+          <button *ngIf="hasAddress && !editingAddress" type="button" class="btn-primary" (click)="toggleAddressEdit()">Alterar Endereco</button>
+          <button *ngIf="hasAddress && editingAddress" type="button" class="btn-primary" (click)="submitAddress()">Atualizar Endereco</button>
+          <button *ngIf="!hasAddress" type="button" class="btn-primary" (click)="submitAddress()">Adicionar Endereco</button>
+        </div>
+      </section>
+
+      <section *ngIf="selectedMenu === 'dados-pedidos'" class="section-card">
+        <h3>Dados de Pedidos</h3>
+
+        <div class="orders" *ngIf="orders.length > 0; else noOrders">
+          <article class="order-card" *ngFor="let order of orders">
+            <img *ngIf="getOrderImage(order)" [src]="getOrderImage(order)" alt="Imagem do carro" class="order-image" />
+            <div class="order-details">
+              <p><strong>Descricao:</strong> {{ getOrderDescription(order) }}</p>
+              <p><strong>Preco:</strong> {{ getOrderPrice(order) | currency:'BRL':'symbol':'1.2-2' }}</p>
+              <p><strong>Data do pedido:</strong> {{ getOrderDate(order) | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+          </article>
+        </div>
+
+        <ng-template #noOrders>
+          <p class="empty-message">Nenhum pedido encontrado para este cliente.</p>
+        </ng-template>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+      <h3>{{ modalTitle }}</h3>
+      <p>{{ modalMessage }}</p>
+      <button type="button" (click)="closeModal()">Fechar</button>
+    </div>
+  </div>
+
+  <ngx-loading [show]="loading" [config]="{ backdrop: true, primaryColour: '#2F4F7F', secondaryColour: '#000000', tertiaryColour: '#ffffff' }"></ngx-loading>
+</section>

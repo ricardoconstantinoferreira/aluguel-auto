@@ -34,6 +34,11 @@ const routes: Routes = [
     path: 'buy', 
     loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'endereco',
+    loadChildren: () => import('./endereco/endereco.module').then(m => m.EnderecoModule),
+    canActivate: [AuthGuard]
   }
 ];
 
