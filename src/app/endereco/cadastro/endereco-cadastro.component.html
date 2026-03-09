@@ -141,11 +141,22 @@
 
         <div class="orders" *ngIf="orders.length > 0; else noOrders">
           <article class="order-card" *ngFor="let order of orders">
-            <img *ngIf="getOrderImage(order)" [src]="getOrderImage(order)" alt="Imagem do carro" class="order-image" />
             <div class="order-details">
-              <p><strong>Descricao:</strong> {{ getOrderDescription(order) }}</p>
-              <p><strong>Preco:</strong> {{ getOrderPrice(order) | currency:'BRL':'symbol':'1.2-2' }}</p>
-              <p><strong>Data do pedido:</strong> {{ getOrderDate(order) | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p class="pedido"><strong>Codigo Pedido:</strong> {{ order?.id }}</p>
+              <p class="pedido"><strong>Preco Total do Pedido:</strong> {{ getOrderPrice(order) | currency:'BRL':'symbol':'1.2-2' }}</p>
+              <p class="pedido"><strong>Data do pedido:</strong> {{ getOrderDate(order) | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+
+            <div class="order-items">
+              <div *ngFor="let item of getOrderItems(order.id)" class="order-item">                       
+                <p><strong>Modelo:</strong> {{ item.model || item.model }}</p>
+                <p><strong>Ano:</strong> {{ item.year || item.ano }}</p>
+                <p><strong>Montadora:</strong> {{ item.carmaker || item.carmaker }}</p>
+                <p><strong>Preço:</strong> {{ (item.price || item.preco) | currency:'BRL':'symbol':'1.2-2'}}</p>
+                <img *ngIf="getOrderImage(item.image)" [src]="getOrderImage(item.image)" 
+                alt="Imagem do carro" class="order-image" />
+
+              </div>
             </div>
           </article>
         </div>

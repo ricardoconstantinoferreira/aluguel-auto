@@ -1,14 +1,17 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 import { EnderecoService } from '../endereco.service';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
 
 @Component({
   selector: 'app-endereco-cadastro',
   imports: [CommonModule, ReactiveFormsModule, NgxLoadingModule],
   templateUrl: './endereco-cadastro.component.html',
-  styleUrl: './endereco-cadastro.component.css'
+  styleUrls: ['./endereco-cadastro.component.css'],
+  providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 })
 export class EnderecoCadastroComponent implements OnInit {
   selectedMenu: 'dados-pessoais' | 'dados-endereco' | 'dados-pedidos' = 'dados-pessoais';
@@ -30,6 +33,7 @@ export class EnderecoCadastroComponent implements OnInit {
   changingPassword = false;
 
   orders: any[] = [];
+  orderItemsByOrderId: Record<number, any[]> = {};
 
   cpfValidator = (control: AbstractControl) => {
     const raw = (control.value || '').toString().replace(/\D/g, '');
@@ -72,6 +76,8 @@ export class EnderecoCadastroComponent implements OnInit {
     this.loadCustomer();
     this.loadAddress();
     this.loadOrders();
+
+    registerLocaleData(localePt);
   }
 
   selectMenu(menu: 'dados-pessoais' | 'dados-endereco' | 'dados-pedidos'): void {
@@ -134,16 +140,32 @@ export class EnderecoCadastroComponent implements OnInit {
     });
   }
 
+  loadOrderItems(orderId: number): void {
+    this.enderecoService.getOrderItems(orderId, this.customerId).subscribe({
+      next: (items) => {
+        this.orderItemsByOrderId[orderId] = Array.isArray(items) ? items : [];
+      },
+      error: () => {
+        this.orderItemsByOrderId[orderId] = [];
+      }
+    });
+  }
+
   loadOrders(): void {
     this.enderecoService.getOrders(this.customerId).subscribe({
       next: (orders) => {
-        debugger;
         this.orders = Array.isArray(orders) ? orders : [];
+        this.orders.forEach((order) => this.loadOrderItems(order.id));
       },
       error: () => {
         this.orders = [];
+        this.orderItemsByOrderId = {};
       }
     });
+  }
+
+  getOrderItems(orderId: number): any[] {
+    return this.orderItemsByOrderId[orderId] || [];
   }
 
   togglePersonalEdit(): void {
@@ -336,15 +358,14 @@ export class EnderecoCadastroComponent implements OnInit {
   }
 
   getOrderPrice(order: any): number {
-    return Number(order?.price || order?.valor || order?.modelPrice || 0);
+    return Number(order?.totalPrice || order?.totalPrice || order?.totalPrice || 0);
   }
 
   getOrderDate(order: any): string {
-    return order?.orderDate || order?.createdAt || order?.dataPedido || '';
+    return order?.dateOrder || order?.dateOrder || order?.dateOrder || '';
   }
 
-  getOrderImage(order: any): string {
-    const image = order?.image || order?.modelImage || order?.imagem || order?.model?.image;
+  getOrderImage(image: any): string {
 
     if (!image) {
       return '';
