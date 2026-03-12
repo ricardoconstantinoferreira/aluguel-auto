@@ -22,7 +22,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.isLoggedIn) {
-      this.router.navigateByUrl('/buy/alugar-carros');
+      if (this.auth.isCustomerCommon) {
+        this.router.navigateByUrl('/buy/alugar-carros');
+      } else if (this.auth.isAdmin) {
+        this.router.navigateByUrl('/model/cadastro');
+      }
     } else {
       this.auth.logout();
     }
@@ -38,7 +42,13 @@ export class LoginComponent implements OnInit {
     if (this.form.invalid) return;
     const { email, password } = this.form.value;
     this.auth.login(email, password).subscribe({
-      next: () => this.router.navigateByUrl('/buy/alugar-carros'),
+      next: () => {
+        if (this.auth.isCustomerCommon) {
+          this.router.navigateByUrl('/buy/alugar-carros');
+        } else if (this.auth.isAdmin) {
+          this.router.navigateByUrl('/model/cadastro');
+        }
+      },
       error: err => {
         this.errorMessage = err?.error?.message || 'Email ou senha inválidos';
         this.showErrorModal = true;

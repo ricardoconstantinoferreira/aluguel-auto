@@ -21,15 +21,6 @@
       <small *ngIf="form.get('email')?.invalid && form.get('email')?.touched">Email inválido</small>
     </div>
 
-    <div class="field">
-      <label for="tipo">Tipo de Cliente</label>
-      <select id="tipo" formControlName="tipo">
-        <option [ngValue]="null" disabled>Selecione</option>
-        <option *ngFor="let t of tipos; let i = index" [ngValue]="i">{{ t }}</option>
-      </select>
-      <small *ngIf="form.get('tipo')?.invalid && form.get('tipo')?.touched">Selecione o tipo</small>
-    </div>
-
     <div class="actions">
       <button type="submit" [disabled]="form.invalid">Salvar</button>
     </div>
