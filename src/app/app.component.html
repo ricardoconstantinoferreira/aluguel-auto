@@ -401,6 +401,13 @@
       </li>
 
       <li class="nav-item dropdown" *ngIf="authService.isLoggedIn && authService.isAdmin">
+        <p class="nav-link">Categoria ▾</p>
+        <ul class="dropdown-menu" role="menu">
+          <li role="none"><a role="menuitem" routerLink="/categoria/cadastro">Cadastro de Categorias</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn && authService.isAdmin">
         <p class="nav-link">Montadora ▾</p>
         <ul class="dropdown-menu" role="menu">
           <li role="none"><a role="menuitem" routerLink="/carmaker/cadastro">Cadastro de montadoras</a></li>
