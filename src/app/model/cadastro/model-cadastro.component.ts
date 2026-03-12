@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarmakerService, Carmaker } from 'src/app/carmaker/carmaker.service';
 import { ModelService } from '../model.service';
+import { Categoria, CategoriaService } from 'src/app/categoria/categoria.service';
 
 @Component({
   selector: 'app-model-cadastro',
@@ -13,8 +14,11 @@ import { ModelService } from '../model.service';
 })
 export class ModelCadastroComponent implements OnInit {
   carmakers: Carmaker[] = [];
+  categorias: Categoria[] = [];
   selectedFile: File | null = null;
   previewUrl: string | ArrayBuffer | null = null;
+  existingImageUrl: string | null = null;
+  existingImageLabel = '';
   showModal = false;
   modalTitle = '';
   modalMessage = '';
@@ -26,17 +30,20 @@ export class ModelCadastroComponent implements OnInit {
     preco: ['', [Validators.required]],
     ano: [new Date().getFullYear(), [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
     carmakerId: [null, [Validators.required]],
+    categoriaId: [null, [Validators.required]],
     imagem: ['', [Validators.required]]
   });
 
   constructor(
     private fb: FormBuilder,
     private carmakerService: CarmakerService,
-    private modelService: ModelService
+    private modelService: ModelService,
+    private categoriaService: CategoriaService
   ) { }
 
   ngOnInit() {
     this.carmakerService.list().subscribe(data => this.carmakers = data);
+    this.categoriaService.list().subscribe(data => this.categorias = data);
     // ensure we have latest data
     this.carmakerService.refresh();
     this.loadPrefillFromState();
@@ -56,6 +63,8 @@ export class ModelCadastroComponent implements OnInit {
     }
 
     this.selectedFile = input.files[0];
+    this.existingImageUrl = null;
+    this.existingImageLabel = '';
     imageControl?.setValue(this.selectedFile.name);
     imageControl?.markAsTouched();
     imageControl?.updateValueAndValidity();
@@ -95,18 +104,14 @@ export class ModelCadastroComponent implements OnInit {
     this.showModal = true;
   }
 
-  onSubmit() {
-    if (!this.selectedFile) {
-      this.form.get('imagem')?.setErrors({ required: true });
-      this.form.get('imagem')?.markAsTouched();
-    }
+  async onSubmit() {
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const { id, descricao, ano, carmakerId, preco } = this.form.value;
+    const { id, descricao, ano, carmakerId, preco, categoriaId } = this.form.value;
     const descricaoValue = (descricao ?? '').toString().trim();
     const fd = new FormData();
     if (id) fd.append('id', String(id));
@@ -115,6 +120,7 @@ export class ModelCadastroComponent implements OnInit {
     fd.append('carmakerId', String(carmakerId));
     fd.append('price', String(preco).replace(/\./g, '').replace(',', '.'));
     fd.append('active', Boolean(true).toString());
+    fd.append('categoryId', String(categoriaId));
     if (this.selectedFile) fd.append('image', this.selectedFile, this.selectedFile.name);
 
     this.modelService.create(fd).subscribe({
@@ -123,6 +129,8 @@ export class ModelCadastroComponent implements OnInit {
         this.form.reset({ ano: new Date().getFullYear(), carmakerId: null });
         this.previewUrl = null;
         this.selectedFile = null;
+        this.existingImageUrl = null;
+        this.existingImageLabel = '';
       },
       error: err => this.openModal('Erro', 'Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''))
     });
@@ -138,8 +146,33 @@ export class ModelCadastroComponent implements OnInit {
       descricao: prefill.descricao || prefill.description || '',
       preco: this.formatPriceForDisplay(prefill.preco ?? prefill.price ?? ''),
       ano: Number(prefill.ano ?? prefill.year ?? new Date().getFullYear()),
-      carmakerId: prefill.carmakerId ?? prefill.carmaker?.id ?? null
+      carmakerId: prefill.carmakerId ?? prefill.carmaker?.id ?? null,
+      categoriaId: prefill.categoriaId ?? prefill.categoria?.id ?? null
     });
+
+    const imageUrl = prefill.imagemUrl || prefill.imageUrl || prefill.image || prefill.imagem || null;
+    if (imageUrl) {
+      this.existingImageUrl = String(imageUrl);
+      this.previewUrl = this.resolveImageUrl(this.existingImageUrl);
+      this.existingImageLabel = this.getImageName(this.existingImageUrl);
+      this.form.patchValue({ imagem: this.existingImageLabel || this.existingImageUrl });
+      this.form.get('imagem')?.setErrors(null);
+      this.form.get('imagem')?.updateValueAndValidity();
+    }
+  }
+
+  private resolveImageUrl(imagePath: string): string {
+    const path = (imagePath || '').trim();
+    if (!path) {
+      return '';
+    }
+
+    if (/^https?:\/\//i.test(path)) {
+      return path;
+    }
+
+    const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+    return `http://localhost:8080/${normalizedPath}`;
   }
 
   private formatPriceForDisplay(price: any): string {
@@ -153,5 +186,11 @@ export class ModelCadastroComponent implements OnInit {
     const parsed = Number(normalized);
     if (!Number.isFinite(parsed)) return String(price);
     return parsed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  private getImageName(url: string): string {
+    const cleanUrl = (url || '').split('?')[0];
+    const parts = cleanUrl.split('/').filter(Boolean);
+    return parts.length ? decodeURIComponent(parts[parts.length - 1]) : '';
   }
 }
