@@ -23,7 +23,7 @@ export class EnderecoService {
   }
 
   createAddress(payload: any): Observable<any> {
-    return this.http.post('api/auto/address/', payload);
+    return this.http.post('api/auto/address', payload);
   }
 
   updateAddress(customerId: number, payload: any): Observable<any> {
