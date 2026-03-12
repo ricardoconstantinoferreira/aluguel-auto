@@ -28,6 +28,7 @@
             <th>Descrição</th>
             <th>Ano</th>
             <th>Montadora</th>
+            <th>Categoria</th>
             <th>Carro</th>
             <th class="actions-header">Ações</th>
             </tr>
@@ -39,6 +40,7 @@
                 <td>{{ item.description || item.descricao }}</td>
                 <td>{{ item.year || item.ano }}</td>
                 <td>{{ item.carmaker.description || item.carmaker.descricao }}</td>
+                <td>{{ item.category.description || item.category.descricao }}</td>
                 <td>
                     <img [src]="'http://localhost:8080/' + item.image" alt="Imagem do modelo" width="65px" height="50px" class="model-image" />
                 </td>            

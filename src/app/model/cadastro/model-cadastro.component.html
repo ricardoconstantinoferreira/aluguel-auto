@@ -31,8 +31,18 @@
     </div>
 
     <div class="field">
+      <label for="categoria">Categoria</label>
+      <select id="categoria" formControlName="categoriaId">
+        <option [ngValue]="null" disabled>Selecione</option>
+        <option *ngFor="let c of categorias" [ngValue]="c.id">{{ c.description || c.descricao }}</option>
+      </select>
+      <small *ngIf="form.get('categoriaId')?.invalid && form.get('categoriaId')?.touched">Selecione a categoria</small>
+    </div>
+
+    <div class="field">
       <label for="imagem">Imagem do Modelo</label>
       <input id="imagem" type="file" (change)="onFileSelected($event)" (blur)="form.get('imagem')?.markAsTouched()" accept="image/*" />
+      <small *ngIf="existingImageUrl && !selectedFile">Imagem atual carregada{{ existingImageLabel ? ': ' + existingImageLabel : '' }}. Selecione outro arquivo apenas se quiser trocar.</small>
       <div *ngIf="previewUrl" class="preview"><img [src]="previewUrl" alt="Preview" /></div>
       <small *ngIf="form.get('imagem')?.invalid && form.get('imagem')?.touched">Imagem é obrigatória</small>
     </div>

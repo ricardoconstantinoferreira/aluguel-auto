@@ -8,6 +8,7 @@
                     <p>Ano: {{ item.year || item.ano }}</p>
                     <p>Montadora: {{ item.carmaker.description || item.carmaker.descricao }}</p>
                     <p>Preço: {{ (item.price || item.preco) | currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <p>Categoria {{ item.category.description || item.category.descricao }}</p>
                     <button type="button" class="btn-alugar" (click)="rent(item)">Alugar</button>
                 </div>
             </div>
