@@ -13,7 +13,6 @@ import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
   styleUrls: ['./clientes-cadastro.component.css']
 })
 export class ClientesCadastroComponent {
-  tipos = ['Usuário', 'Cliente Comum'];
   showModal = false;
   modalTitle = '';
   modalMessage = '';
@@ -28,8 +27,7 @@ export class ClientesCadastroComponent {
   form = this.fb.group({
     documento: ['', [Validators.required, this.cpfValidator]],
     nome: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
-    tipo: [null, [Validators.required]]
+    email: ['', [Validators.required, Validators.email]]
   });
 
   constructor(private fb: FormBuilder, @Inject(ClientesService) private service: ClientesService, private router: Router) { }

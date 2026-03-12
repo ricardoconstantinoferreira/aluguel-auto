@@ -72,4 +72,13 @@ export class AuthService {
     return cartItems ? parseInt(cartItems, 10) : 0;
   }
 
+  get isAdmin(): boolean {
+    return localStorage.getItem(this.customerTypeKey) == "USER";
+  }
+
+  get isCustomerCommon(): boolean {
+    return localStorage.getItem(this.customerTypeKey) == "CUSTOMER_COMMON";
+  }
+
+
 }
