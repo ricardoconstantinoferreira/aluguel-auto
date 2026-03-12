@@ -153,6 +153,7 @@
                 <p><strong>Ano:</strong> {{ item.year || item.ano }}</p>
                 <p><strong>Montadora:</strong> {{ item.carmaker || item.carmaker }}</p>
                 <p><strong>Preço:</strong> {{ (item.price || item.preco) | currency:'BRL':'symbol':'1.2-2'}}</p>
+                <p><strong>Categoria:</strong> {{ item.category || item.category }}</p>
                 <img *ngIf="getOrderImage(item.image)" [src]="getOrderImage(item.image)" 
                 alt="Imagem do carro" class="order-image" />
 

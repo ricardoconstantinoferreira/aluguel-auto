@@ -19,6 +19,7 @@
                         <p>Ano: {{ item.model.year || item.model.ano }}</p>
                         <p>Montadora: {{ item.model.carmaker.description || item.model.carmaker.descricao }}</p>
                         <p>Preço: {{ (item.model.price || item.model.preco) | currency:'BRL':'symbol':'1.2-2'}}</p>
+                        <p>Categoria {{ item.model.category.description || item.model.category.descricao }}</p>
                     </div>
                 </div>
                 <button type="button" class="btn-remove" (click)="removeFromCart(item.model.id)">Remover</button>
