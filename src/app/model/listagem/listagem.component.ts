@@ -59,6 +59,7 @@ export class ListagemComponent implements AfterViewInit {
           carmakerId: item?.carmakerId ?? item?.carmaker?.id ?? null,
           categoriaId: item?.categoryId ?? item?.category?.id ?? null,
           imageUrl: item?.imageUrl ?? item?.imagemUrl ?? item?.image ?? item?.imagem ?? null,
+          qtde: item?.qtde ?? item?.qtde ?? item?.qtde ?? item?.qtde ?? null,
         }
       }
     });

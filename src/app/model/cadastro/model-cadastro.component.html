@@ -22,6 +22,12 @@
     </div>
 
     <div class="field">
+      <label for="qtde">Quantidade</label>
+      <input id="qtde" type="number" formControlName="qtde" />
+      <small *ngIf="form.get('qtde')?.invalid && form.get('qtde')?.touched">Quantidade inválido</small>
+    </div>
+
+    <div class="field">
       <label for="carmaker">Montadora</label>
       <select id="carmaker" formControlName="carmakerId">
         <option [ngValue]="null" disabled>Selecione</option>
