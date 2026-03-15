@@ -29,6 +29,7 @@ export class ModelCadastroComponent implements OnInit {
     descricao: ['', [Validators.required]],
     preco: ['', [Validators.required]],
     ano: [new Date().getFullYear(), [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear() + 1)]],
+    qtde: ['', [Validators.required]],
     carmakerId: [null, [Validators.required]],
     categoriaId: [null, [Validators.required]],
     imagem: ['', [Validators.required]]
@@ -111,7 +112,7 @@ export class ModelCadastroComponent implements OnInit {
       return;
     }
 
-    const { id, descricao, ano, carmakerId, preco, categoriaId } = this.form.value;
+    const { id, descricao, ano, carmakerId, preco, categoriaId, qtde} = this.form.value;
     const descricaoValue = (descricao ?? '').toString().trim();
     const fd = new FormData();
     if (id) fd.append('id', String(id));
@@ -121,6 +122,7 @@ export class ModelCadastroComponent implements OnInit {
     fd.append('price', String(preco).replace(/\./g, '').replace(',', '.'));
     fd.append('active', Boolean(true).toString());
     fd.append('categoryId', String(categoriaId));
+    fd.append('qtde', String(qtde));
     if (this.selectedFile) fd.append('image', this.selectedFile, this.selectedFile.name);
 
     this.modelService.create(fd).subscribe({
@@ -147,7 +149,8 @@ export class ModelCadastroComponent implements OnInit {
       preco: this.formatPriceForDisplay(prefill.preco ?? prefill.price ?? ''),
       ano: Number(prefill.ano ?? prefill.year ?? new Date().getFullYear()),
       carmakerId: prefill.carmakerId ?? prefill.carmaker?.id ?? null,
-      categoriaId: prefill.categoriaId ?? prefill.categoria?.id ?? null
+      categoriaId: prefill.categoriaId ?? prefill.categoria?.id ?? null,
+      qtde: prefill.qtde ?? prefill.qtde ?? null
     });
 
     const imageUrl = prefill.imagemUrl || prefill.imageUrl || prefill.image || prefill.imagem || null;
@@ -182,9 +185,31 @@ export class ModelCadastroComponent implements OnInit {
       return price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    const normalized = String(price).trim().replace(/\./g, '').replace(',', '.');
+    const raw = String(price).trim();
+    if (!raw) return '';
+
+    const sanitized = raw.replace(/\s/g, '');
+    const hasComma = sanitized.includes(',');
+    const hasDot = sanitized.includes('.');
+
+    let normalized = sanitized;
+
+    if (hasComma && hasDot) {
+      const lastComma = sanitized.lastIndexOf(',');
+      const lastDot = sanitized.lastIndexOf('.');
+      const decimalSeparator = lastComma > lastDot ? ',' : '.';
+
+      normalized = decimalSeparator === ','
+        ? sanitized.replace(/\./g, '').replace(',', '.')
+        : sanitized.replace(/,/g, '');
+    } else if (hasComma) {
+      normalized = sanitized.replace(/\./g, '').replace(',', '.');
+    } else {
+      normalized = sanitized.replace(/,/g, '');
+    }
+
     const parsed = Number(normalized);
-    if (!Number.isFinite(parsed)) return String(price);
+    if (!Number.isFinite(parsed)) return raw;
     return parsed.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 

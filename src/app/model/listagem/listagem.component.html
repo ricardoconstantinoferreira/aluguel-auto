@@ -30,6 +30,7 @@
             <th>Montadora</th>
             <th>Categoria</th>
             <th>Carro</th>
+            <th>Qtde</th>
             <th class="actions-header">Ações</th>
             </tr>
         </thead>
@@ -39,8 +40,9 @@
                 <td>{{ item.id }}</td>
                 <td>{{ item.description || item.descricao }}</td>
                 <td>{{ item.year || item.ano }}</td>
-                <td>{{ item.carmaker.description || item.carmaker.descricao }}</td>
-                <td>{{ item.category.description || item.category.descricao }}</td>
+                <td>{{ item.descriptionCarmaker || item.descriptionCarmaker }}</td>
+                <td>{{ item.descriptionCategory || item.descriptionCategory }}</td>
+                <td>{{ item.qtde || item.quantidade }}</td>
                 <td>
                     <img [src]="'http://localhost:8080/' + item.image" alt="Imagem do modelo" width="65px" height="50px" class="model-image" />
                 </td>            
