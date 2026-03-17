@@ -44,6 +44,11 @@ const routes: Routes = [
     path: 'endereco',
     loadChildren: () => import('./endereco/endereco.module').then(m => m.EnderecoModule),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'rental',
+    loadChildren: () => import('./rental/rental.module').then(m => m.RentalModule),
+    canActivate: [AuthGuard]
   }
 ];
 

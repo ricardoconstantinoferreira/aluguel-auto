@@ -396,6 +396,14 @@
         <a role="menuitem" routerLink="/clientes/cadastro">Cadastre-se</a>    
       </li>
 
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn && authService.isAdmin">
+        <p class="nav-link">Status de Locação ▾</p>
+        <ul class="dropdown-menu" role="menu">
+          <li role="none"><a role="menuitem" routerLink="/rental/rules">Regras de Locação</a></li>
+          <li role="none"><a role="menuitem" routerLink="/rental/devolucao">Devolução de Locação</a></li>
+        </ul>
+      </li>
+
       <li class="nav-item" *ngIf="authService.isLoggedIn && authService.isCustomerCommon">
         <a role="menuitem" routerLink="/endereco/cadastro">Minha Conta</a>    
       </li>

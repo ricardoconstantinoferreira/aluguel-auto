@@ -1,0 +1,67 @@
+.rules-container {
+	max-width: 500px;
+	margin: 24px auto;
+	padding: 18px;
+	border: 1px solid #eee;
+	border-radius: 6px;
+	background: #fff;
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.rules-container h2 {
+	margin-top: 0;
+	color: #2F4F7F;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 14px;
+}
+
+.field label {
+	font-weight: 600;
+	margin-bottom: 6px;
+}
+
+.field input {
+	padding: 8px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+}
+
+.value-box {
+	border: 1px solid #e9eef6;
+	border-radius: 4px;
+	padding: 10px;
+	background: #f8fafd;
+}
+
+.value-box p {
+	margin: 0;
+	color: #1f3c66;
+	font-weight: 600;
+}
+
+.actions {
+	display: flex;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.actions button {
+	padding: 8px 14px;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	cursor: pointer;
+	background: #2F4F7F;
+}
+
+.btn-update {
+	background: #2F4F7F;
+}
+
+.btn-cancel {
+	background: #607d8b;
+}
