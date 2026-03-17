@@ -1,0 +1,13 @@
+.return-container {
+	max-width: 500px;
+	margin: 24px auto;
+	padding: 18px;
+	border: 1px solid #eee;
+	border-radius: 6px;
+	background: #fff;
+}
+
+.return-container h2 {
+	margin-top: 0;
+	color: #2F4F7F;
+}

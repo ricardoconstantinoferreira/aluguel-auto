@@ -1,0 +1,51 @@
+<div class="rules-container">
+	<h2>Regras de Locação</h2>
+
+	<div class="field" *ngIf="!isViewMode">
+        <input id="id" type="hidden" [(ngModel)]="formData.id" />
+		<label for="percentage">Porcentagem</label>
+		<input
+			id="percentage"
+			type="number"
+			min="0"
+			max="100"
+			[(ngModel)]="formData.percentageInterest"
+			name="percentage"
+			placeholder="Ex.: 15"
+		/>
+	</div>
+
+	<div class="field" *ngIf="!isViewMode">
+		<label for="quantityDays">Quantidade de Dias</label>
+		<input
+			id="quantityDays"
+			type="number"
+			min="1"
+			[(ngModel)]="formData.qtdeDaysRent"
+			name="quantityDays"
+			placeholder="Ex.: 30"
+		/>
+	</div>
+
+	<div class="field value-box" *ngIf="isViewMode">
+		<label>Porcentagem</label>
+		<p>{{ savedData.percentageInterest }}%</p>
+	</div>
+
+	<div class="field value-box" *ngIf="isViewMode">
+		<label>Quantidade de Dias</label>
+		<p>{{ savedData.qtdeDaysRent }}</p>
+	</div>
+
+	<div class="actions" *ngIf="!isViewMode && !dataUnique">
+		<button type="button" (click)="onSave()">Salvar</button>
+	</div>
+
+    <div class="actions" *ngIf="!isViewMode && dataUnique">
+		<button type="button" (click)="update()">Alterar</button>
+	</div>
+
+	<div class="actions" *ngIf="isViewMode && dataUnique">
+		<button type="button" class="btn-update" (click)="onUpdate()">Atualizar</button>
+	</div>
+</div>
