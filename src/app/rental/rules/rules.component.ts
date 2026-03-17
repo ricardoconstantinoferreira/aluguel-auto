@@ -29,7 +29,7 @@ export class RulesComponent implements OnInit {
     this.ruleService.get().subscribe({
       next: response => {
         const data = this.extractRuleData(response);
-    
+
         if (!data) {
           return;
         }

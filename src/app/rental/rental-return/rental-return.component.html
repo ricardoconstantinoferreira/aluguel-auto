@@ -1,4 +1,65 @@
 <div class="return-container">
 	<h2>Devolução de Locação</h2>
-	<p>Tela em construção.</p>
+
+	<div class="filter-row">
+		<label for="statusFilter">Status</label>
+		<select
+			id="statusFilter"
+			[(ngModel)]="selectedStatus"
+			(change)="onStatusChange()"
+			name="statusFilter"
+		>
+			<option *ngFor="let option of statusOptions" [ngValue]="option.value">{{ option.label }}</option>
+		</select>
+	</div>
+
+	<div class="table-wrapper">
+		<table class="orders-table">
+			<thead>
+				<tr>
+					<th>Cliente</th>
+					<th>Data da Locação</th>
+					<th>Total do Pedido</th>
+					<th>Status</th>
+					<th>Valor juros a pagar</th>
+					<th class="actions-header">Ação</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let order of pagedOrders">
+					<td>{{ order.cliente }}</td>
+					<td>{{ order.dataLocacao ? (order.dataLocacao | date:'dd/MM/yyyy') : '-' }}</td>
+                    <td>{{ (order.totalPedido || order.totalPedido) | currency:'BRL':'symbol':'1.2-2'}}</td>
+					<td>{{ order.status == "RENTED" ? "Alugado" : "Devolvido" }}</td>
+					<td>{{ (order.jurosPagar || order.jurosPagar) | currency:'BRL':'symbol':'1.2-2' }}</td>
+					<td class="actions-column">
+						<button
+							type="button"
+							class="btn-return"
+							*ngIf="!order.devolucaoFeita"
+							(click)="onReturned(order)"
+						>
+							Devolução
+						</button>
+						<span class="done-label" *ngIf="order.devolucaoFeita">Devolução Feita</span>
+					</td>
+				</tr>
+				<tr *ngIf="pagedOrders.length === 0">
+					<td colspan="6" class="empty-row">Nenhum pedido encontrado para o status selecionado.</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="paginator-wrapper">
+		<mat-paginator
+			class="table-paginator"
+			[length]="totalItems"
+			[pageSize]="pageSize"
+			[pageSizeOptions]="[5, 10, 20]"
+			(page)="onPageChange($event)"
+			aria-label="Selecionar página"
+		>
+		</mat-paginator>
+	</div>
 </div>
