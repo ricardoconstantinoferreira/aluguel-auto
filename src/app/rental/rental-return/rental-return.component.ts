@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { RuleService } from '../rule.service';
 import { RentalReturnService } from '../rental-return.service';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import { LOCALE_ID } from '@angular/core';
 
 interface RentalOrderView {
   id: number;
@@ -17,7 +20,8 @@ interface RentalOrderView {
   selector: 'app-rental-return',
   standalone: false,
   templateUrl: './rental-return.component.html',
-  styleUrl: './rental-return.component.css'
+  styleUrl: './rental-return.component.css',
+  providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
 })
 export class RentalReturnComponent implements OnInit {
   statusOptions = [
@@ -43,6 +47,7 @@ export class RentalReturnComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrders();
+    registerLocaleData(localePt);
   }
 
   onStatusChange(): void {
@@ -58,9 +63,9 @@ export class RentalReturnComponent implements OnInit {
 
   onReturned(order: RentalOrderView): void {
     this.rentalReturnService.returned(order.id).subscribe({
-      next: () => {
-        order.jurosPagar = this.calculateInterest(order);
-        order.status = 'Devolução';
+      next: (data) => {
+        order.jurosPagar = data.interestValuePayment;
+        order.status = 'RETURNED';
         order.devolucaoFeita = true;
       },
       error: err => {
@@ -112,25 +117,6 @@ export class RentalReturnComponent implements OnInit {
       devolucaoFeita
     };
   }
-
-  private calculateInterest(order: RentalOrderView): number {
-    if (!order.dataLocacao || this.rulePercentageInterest <= 0 || this.ruleQtdeDaysRent <= 0) {
-      return 0;
-    }
-
-    const today = new Date();
-    const limitDate = new Date(order.dataLocacao);
-    limitDate.setHours(0, 0, 0, 0);
-    limitDate.setDate(limitDate.getDate() + this.ruleQtdeDaysRent);
-
-    if (today <= limitDate) {
-      return 0;
-    }
-
-    const interestValue = order.totalPedido * (this.rulePercentageInterest / 100);
-    return Math.round(interestValue * 100) / 100;
-  }
-
 
   private parseNumber(value: any): number {
     if (value === null || value === undefined) {

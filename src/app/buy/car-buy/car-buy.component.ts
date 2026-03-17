@@ -64,7 +64,7 @@ export class CarBuyComponent implements OnInit {
     
     this.loading = true;
     this.buyService.sendOrder(data).subscribe(() => {
-      this.openModal('Sucesso', 'Pedido realizado com sucesso!'); 
+      this.openModal('Sucesso', 'Pedido de locação realizado com sucesso!'); 
       
       this.loading = false;
     });

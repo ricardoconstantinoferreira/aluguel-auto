@@ -73,8 +73,6 @@ export class AlugarCarrosComponent implements AfterViewInit {
           data['qty'] = 1;
         } 
         localStorage.setItem('cart_items', data['qty'].toString());
-
-        this.router.navigate(['/buy/car-buy']);
       },
       err => {
         let message = JSON.parse(err.error).message || 'Ocorreu um erro ao alugar o carro. Por favor, tente novamente.';
