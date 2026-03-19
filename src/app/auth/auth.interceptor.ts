@@ -3,17 +3,19 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/c
 import { catchError, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { resolveApiRequestUrl } from '../shared/api-url.util';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let cloned = req;
+    const resolvedUrl = resolveApiRequestUrl(req.url);
+    let cloned = resolvedUrl === req.url ? req : req.clone({ url: resolvedUrl });
 
     // Endpoints that should NOT receive Authorization header
     const publicPaths = ['api/auto/auth/login', '/api/auto/auth', '/api/auto/customer', '/api/reset-password'];
-    const isPublic = publicPaths.some(p => req.url.includes(p));
+    const isPublic = publicPaths.some(p => cloned.url.includes(p));
 
     const token = this.auth.token;
     if (token && !isPublic) {

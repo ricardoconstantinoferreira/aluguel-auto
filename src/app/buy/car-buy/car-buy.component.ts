@@ -8,6 +8,7 @@ import localePt from '@angular/common/locales/pt';
 import { LOCALE_ID } from '@angular/core';
 import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 import { Router } from '@angular/router';
+import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-car-buy',
@@ -23,6 +24,7 @@ export class CarBuyComponent implements OnInit {
   modalTitle = '';
   modalMessage = '';
   loading = false;
+  protected readonly resolveImageUrl = resolveApiAssetUrl;
 
   constructor(private authService: AuthService, private buyService: BuyService, private router: Router) { }
 

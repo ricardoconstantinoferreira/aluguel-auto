@@ -4,6 +4,7 @@ import { ModelService } from '../model.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-listagem',
@@ -24,6 +25,7 @@ export class ListagemComponent implements AfterViewInit {
   modalMessage = '';
   showDeleteConfirmModal = false;
   pendingDeleteItem: any | null = null;
+  protected readonly resolveImageUrl = resolveApiAssetUrl;
 
   constructor(private service: ModelService, private router: Router) { }
 

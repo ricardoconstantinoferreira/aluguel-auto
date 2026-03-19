@@ -5,6 +5,7 @@ import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 import { EnderecoService } from '../endereco.service';
 import localePt from '@angular/common/locales/pt';
 import { LOCALE_ID } from '@angular/core';
+import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-endereco-cadastro',
@@ -371,11 +372,7 @@ export class EnderecoCadastroComponent implements OnInit {
       return '';
     }
 
-    if (image.startsWith('http')) {
-      return image;
-    }
-
-    return `http://localhost:8080/${image}`;
+    return resolveApiAssetUrl(image);
   }
 
   closeModal(): void {

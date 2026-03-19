@@ -13,7 +13,7 @@
         <div class="cart-items">
             <div *ngFor="let item of allData" class="cart-item">
                 <div class="car-card">
-                    <img [src]="'http://localhost:8080/' + item.model.image" alt="Imagem do carro" class="car-image" />
+                    <img [src]="resolveImageUrl(item.model.image)" alt="Imagem do carro" class="car-image" />
                     <div class="car-details">
                         <h3>{{ item.model.description || item.model.descricao }}</h3>
                         <p>Ano: {{ item.model.year || item.model.ano }}</p>

@@ -4,6 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { CarmakerService, Carmaker } from 'src/app/carmaker/carmaker.service';
 import { ModelService } from '../model.service';
 import { Categoria, CategoriaService } from 'src/app/categoria/categoria.service';
+import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-model-cadastro',
@@ -170,12 +171,7 @@ export class ModelCadastroComponent implements OnInit {
       return '';
     }
 
-    if (/^https?:\/\//i.test(path)) {
-      return path;
-    }
-
-    const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
-    return `http://localhost:8080/${normalizedPath}`;
+    return resolveApiAssetUrl(path);
   }
 
   private formatPriceForDisplay(price: any): string {

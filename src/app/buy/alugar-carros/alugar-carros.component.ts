@@ -8,6 +8,7 @@ import { ModelService } from 'src/app/model/model.service';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { LOCALE_ID } from '@angular/core';
+import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-alugar-carros',
@@ -29,6 +30,7 @@ export class AlugarCarrosComponent implements AfterViewInit {
   modalMessage = '';
   showDeleteConfirmModal = false;
   pendingDeleteItem: any | null = null;
+  protected readonly resolveImageUrl = resolveApiAssetUrl;
 
   constructor(
     private service: ModelService, private router: Router, private http: HttpClient
