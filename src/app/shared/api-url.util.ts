@@ -1,4 +1,4 @@
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 function normalizeBaseUrl(baseUrl: string): string {
   return (baseUrl || '').replace(/\/+$/, '');
