@@ -3,7 +3,7 @@ const proxy = [
         context: [
             '/api'
         ],
-        target: 'http://localhost:8080/',
+        target: 'https://auto-1-k9gu.onrender.com/',
         secure: false,
         changeOrigin: true,
         pathRewrite: {
