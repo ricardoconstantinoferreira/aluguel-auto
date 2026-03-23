@@ -3,7 +3,7 @@ const proxy = [
         context: [
             '/api'
         ],
-        target: 'http://localhost:8080/',
+        target: 'http://localhost:9090/',
         secure: false,
         changeOrigin: true,
         pathRewrite: {
