@@ -57,7 +57,8 @@ export class ClientesCadastroComponent {
 
     this.loading = true;
     this.service.create(payload).subscribe({
-      next: () => {
+      next: data => {
+        console.log(data);
         this.loading = false;
         this.openModal('Sucesso', 'Cliente cadastrado com sucesso, você receberá um e-mail para cadastrar sua senha.');
         this.form.reset();
