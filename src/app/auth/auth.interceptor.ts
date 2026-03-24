@@ -13,9 +13,12 @@ export class AuthInterceptor implements HttpInterceptor {
     const resolvedUrl = resolveApiRequestUrl(req.url);
     let cloned = resolvedUrl === req.url ? req : req.clone({ url: resolvedUrl });
 
-    // Endpoints that should NOT receive Authorization header
-    const publicPaths = ['api/auto/auth/login', '/api/auto/auth', '/api/auto/customer', '/api/reset-password'];
-    const isPublic = publicPaths.some(p => cloned.url.includes(p));
+    // Keep only specific unauthenticated routes public.
+    const requestPath = this.normalizePath(cloned.url);
+    const isPublicAuth = requestPath === '/api/auto/auth/login' || requestPath === '/api/auto/auth';
+    const isPublicCustomerCreate = requestPath === '/api/auto/customer' && cloned.method === 'POST';
+    const isPublicResetPassword = requestPath.startsWith('/api/auto/customer/reset-password') || requestPath.startsWith('/api/reset-password');
+    const isPublic = isPublicAuth || isPublicCustomerCreate || isPublicResetPassword;
 
     const token = this.auth.token;
     if (token && !isPublic) {
@@ -47,5 +50,13 @@ export class AuthInterceptor implements HttpInterceptor {
         throw err;
       })
     );
+  }
+
+  private normalizePath(url: string): string {
+    const withoutQuery = (url || '').split('?')[0].split('#')[0];
+    const withoutOrigin = withoutQuery.replace(/^https?:\/\/[^/]+/i, '');
+    const withLeadingSlash = withoutOrigin.startsWith('/') ? withoutOrigin : `/${withoutOrigin}`;
+    const trimmed = withLeadingSlash.replace(/\/+$/, '');
+    return trimmed || '/';
   }
 }
