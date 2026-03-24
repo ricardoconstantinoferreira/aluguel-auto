@@ -59,6 +59,10 @@
               <button type="button" class="btn-deletar" (click)="onDelete(item)">Deletar</button>
             </td>
           </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" class="empty-row">Nenhum registro de categoria encontrado.</td>
+          </tr>
         }
       </tbody>
     </table>

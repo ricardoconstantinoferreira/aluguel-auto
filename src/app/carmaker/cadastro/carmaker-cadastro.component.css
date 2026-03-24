@@ -72,6 +72,11 @@ button { padding:8px 12px; background:#2F4F7F; color:white; border:none; border-
 	background: #eef3fb;
 }
 
+.empty-row {
+	text-align: center !important;
+	color: #607d8b;
+}
+
 .paginator-wrapper {
 	margin-top: 12px;
 	display: flex;

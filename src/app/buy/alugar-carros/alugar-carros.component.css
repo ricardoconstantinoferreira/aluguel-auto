@@ -15,6 +15,13 @@
 	justify-content: center;
 }
 
+.empty-row {
+	text-align: center;
+	color: #607d8b;
+	margin: 24px 0;
+	font-weight: 500;
+}
+
 .btn-alugar {
   background-color: #007bff;
   color: white;
