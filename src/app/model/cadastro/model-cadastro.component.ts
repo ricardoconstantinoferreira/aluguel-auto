@@ -5,11 +5,13 @@ import { CarmakerService, Carmaker } from 'src/app/carmaker/carmaker.service';
 import { ModelService } from '../model.service';
 import { Categoria, CategoriaService } from 'src/app/categoria/categoria.service';
 import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
+import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-model-cadastro',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxLoadingModule],
   templateUrl: './model-cadastro.component.html',
   styleUrls: ['./model-cadastro.component.css']
 })
@@ -24,6 +26,7 @@ export class ModelCadastroComponent implements OnInit {
   modalTitle = '';
   modalMessage = '';
   showDeleteConfirmModal = false;
+  loading = false;
 
   form = this.fb.group({
     id: ['', []],
@@ -44,8 +47,20 @@ export class ModelCadastroComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.carmakerService.list().subscribe(data => this.carmakers = data);
-    this.categoriaService.list().subscribe(data => this.categorias = data);
+    this.loading = true;
+    forkJoin({
+      carmakers: this.carmakerService.list(),
+      categorias: this.categoriaService.list()
+    }).subscribe({
+      next: ({ carmakers, categorias }) => {
+        this.carmakers = carmakers;
+        this.categorias = categorias;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
+    });
     // ensure we have latest data
     this.carmakerService.refresh();
     this.loadPrefillFromState();
@@ -126,8 +141,10 @@ export class ModelCadastroComponent implements OnInit {
     fd.append('qtde', String(qtde));
     if (this.selectedFile) fd.append('image', this.selectedFile, this.selectedFile.name);
 
+    this.loading = true;
     this.modelService.create(fd).subscribe({
       next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Modelo cadastrado com sucesso');
         this.form.reset({ ano: new Date().getFullYear(), carmakerId: null });
         this.previewUrl = null;
@@ -135,7 +152,10 @@ export class ModelCadastroComponent implements OnInit {
         this.existingImageUrl = null;
         this.existingImageLabel = '';
       },
-      error: err => this.openModal('Erro', 'Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''))
+      error: err => {
+        this.loading = false;
+        this.openModal('Erro', 'Erro ao cadastrar modelo: ' + (err?.error?.message || err?.message || ''));
+      }
     });
   }
 

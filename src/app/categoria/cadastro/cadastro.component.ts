@@ -3,10 +3,11 @@ import { Component, AfterViewInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { CategoriaService } from '../categoria.service';
+import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 
 @Component({
   selector: 'app-cadastro',
-  imports: [CommonModule, ReactiveFormsModule, MatPaginator],
+  imports: [CommonModule, ReactiveFormsModule, MatPaginator, NgxLoadingModule],
   templateUrl: './cadastro.component.html',
   styleUrl: './cadastro.component.css'
 })
@@ -27,6 +28,7 @@ export class CadastroComponent implements AfterViewInit {
   modalMessage = '';
   showDeleteConfirmModal = false;
   pendingDeleteItem: any | null = null;
+  loading = false;
 
   constructor(private fb: FormBuilder, private service: CategoriaService) {}
 
@@ -38,10 +40,17 @@ export class CadastroComponent implements AfterViewInit {
     const offset = this.currentPage * this.pageSize;
     const limit = offset + this.pageSize;
 
-    this.service.list().subscribe(data => {
-      this.allData = data;
-      this.totalItems = this.allData.length;
-      this.pagedDate = this.allData.slice(offset, limit);
+    this.loading = true;
+    this.service.list().subscribe({
+      next: (data) => {
+        this.allData = data;
+        this.totalItems = this.allData.length;
+        this.pagedDate = this.allData.slice(offset, limit);
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
@@ -69,13 +78,16 @@ export class CadastroComponent implements AfterViewInit {
   }
 
   create(payload: any) {
+    this.loading = true;
     this.service.create(payload).subscribe({
        next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Categoria cadastrada com sucesso');
         this.resetForm();
         this.updatePagedData();
       },
       error: err => {
+        this.loading = false;
         const backendMessage = err?.error?.message || err?.message || '';
         this.openModal('Erro ao cadastrar', backendMessage);
       }
@@ -83,13 +95,16 @@ export class CadastroComponent implements AfterViewInit {
   }
 
   update(payload: any) {
+    this.loading = true;
     this.service.update(this.editingId, payload).subscribe({
       next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Categoria atualizada com sucesso');
         this.resetForm();
         this.updatePagedData();
       },
       error: err => {
+        this.loading = false;
         const backendMessage = err?.error?.message || err?.message || '';
         this.openModal('Erro ao atualizar', backendMessage);
       }
@@ -110,8 +125,10 @@ export class CadastroComponent implements AfterViewInit {
     if (!this.pendingDeleteItem) return;
     const item = this.pendingDeleteItem;
     this.closeDeleteConfirmModal();
+    this.loading = true;
     this.service.delete(item.id).subscribe({
       next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Categoria deletada com sucesso');
         if (this.editingId === item.id) {
           this.resetForm();
@@ -120,6 +137,7 @@ export class CadastroComponent implements AfterViewInit {
         this.updatePagedData();
       },
       error: err => {
+        this.loading = false;
         const backendMessage = err?.error?.message || err?.message || '';
         this.openModal('Erro ao deletar', backendMessage);
       }

@@ -3,11 +3,12 @@ import { AfterViewInit, Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { CarmakerService } from '../carmaker.service';
+import { NgxLoadingModule } from 'ngx-loading-reloaded-ng19';
 
 @Component({
   selector: 'app-carmaker-cadastro',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatPaginator],
+  imports: [CommonModule, ReactiveFormsModule, MatPaginator, NgxLoadingModule],
   templateUrl: './carmaker-cadastro.component.html',
   styleUrls: ['./carmaker-cadastro.component.css']
 })
@@ -27,6 +28,7 @@ export class CarmakerCadastroComponent implements AfterViewInit {
   modalMessage = '';
   showDeleteConfirmModal = false;
   pendingDeleteItem: any | null = null;
+  loading = false;
 
   constructor(private fb: FormBuilder, private service: CarmakerService) { }
 
@@ -38,10 +40,17 @@ export class CarmakerCadastroComponent implements AfterViewInit {
     const offset = this.currentPage * this.pageSize;
     const limit = offset + this.pageSize;
 
-    this.service.list().subscribe(data => {
-      this.allData = data;
-      this.totalItems = this.allData.length;
-      this.pagedDate = this.allData.slice(offset, limit);
+    this.loading = true;
+    this.service.list().subscribe({
+      next: (data) => {
+        this.allData = data;
+        this.totalItems = this.allData.length;
+        this.pagedDate = this.allData.slice(offset, limit);
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      }
     });
   }
 
@@ -60,24 +69,34 @@ export class CarmakerCadastroComponent implements AfterViewInit {
     const descricao = this.form.value.descricao ?? '';
     const payload = { description: descricao };
     if (this.editingId !== null) {
+      this.loading = true;
       this.service.update(this.editingId, payload).subscribe({
         next: () => {
+          this.loading = false;
           this.openModal('Sucesso', 'Montadora atualizada com sucesso');
           this.resetForm();
           this.updatePagedData();
         },
-        error: err => this.openModal('Erro ao atualizar', err?.error?.message || err?.message || 'Erro ao atualizar montadora')
+        error: err => {
+          this.loading = false;
+          this.openModal('Erro ao atualizar', err?.error?.message || err?.message || 'Erro ao atualizar montadora');
+        }
       });
       return;
     }
 
+    this.loading = true;
     this.service.create(payload).subscribe({
       next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Montadora cadastrada com sucesso');
         this.resetForm();
         this.updatePagedData();
       },
-      error: err => this.openModal('Erro ao cadastrar', err?.error?.message || err?.message || 'Erro ao cadastrar montadora')
+      error: err => {
+        this.loading = false;
+        this.openModal('Erro ao cadastrar', err?.error?.message || err?.message || 'Erro ao cadastrar montadora');
+      }
     });
   }
 
@@ -96,8 +115,10 @@ export class CarmakerCadastroComponent implements AfterViewInit {
     if (!this.pendingDeleteItem) return;
     const item = this.pendingDeleteItem;
     this.closeDeleteConfirmModal();
+    this.loading = true;
     this.service.delete(item.id).subscribe({
       next: () => {
+        this.loading = false;
         this.openModal('Sucesso', 'Montadora deletada com sucesso');
         if (this.editingId === item.id) {
           this.resetForm();
@@ -105,7 +126,10 @@ export class CarmakerCadastroComponent implements AfterViewInit {
         this.adjustPageAfterDelete();
         this.updatePagedData();
       },
-      error: err => this.openModal('Erro ao deletar', err?.error?.message || err?.message || 'Erro ao deletar montadora')
+      error: err => {
+        this.loading = false;
+        this.openModal('Erro ao deletar', err?.error?.message || err?.message || 'Erro ao deletar montadora');
+      }
     });
   }
 
