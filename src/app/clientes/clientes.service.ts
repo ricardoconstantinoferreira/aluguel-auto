@@ -9,9 +9,7 @@ export class ClientesService {
 
   create(cliente: any): Observable<any> {
     let uri = 'api/auto/customer';
-    const resolvedUrl = `${environment.apiBaseUrl.replace(/\/+$/, '')}/${uri.replace(/^\/+/, '')}`;
-    console.log('[ClientesService] URL cadastro cliente:', resolvedUrl);
-
+    
     let data = {
       "name": cliente.nome,
       "email": cliente.email,

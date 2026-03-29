@@ -80,5 +80,14 @@ export class AuthService {
     return localStorage.getItem(this.customerTypeKey) == "CUSTOMER_COMMON";
   }
 
+  get isCustomerTypeOne(): boolean {
+    const type = localStorage.getItem(this.customerTypeKey);
+    if (!type) {
+      return false;
+    }
+
+    return type === '1' || Number(type) === 1;
+  }
+
 
 }
