@@ -1,0 +1,30 @@
+<div class="chat-wrapper" [class.open]="isOpen">
+  <button class="chat-toggle" type="button" (click)="toggleOpen()" aria-label="Abrir chat">
+    {{ isOpen ? 'Fechar' : 'Chat' }}
+  </button>
+
+  <section class="chat-box" *ngIf="isOpen">
+    <header class="chat-header">Atendimento</header>
+
+    <div class="chat-messages">
+      <div class="chat-message" *ngFor="let item of messages" [class.customer]="item.author === 'customer'">
+        <span>{{ item.text }}</span>
+      </div>
+
+      <div class="chat-message bot" *ngIf="isLoading">
+        <span>Digitando...</span>
+      </div>
+    </div>
+
+    <form class="chat-form" (ngSubmit)="send()">
+      <input
+        type="text"
+        name="message"
+        [(ngModel)]="message"
+        [disabled]="isLoading"
+        placeholder="Digite sua mensagem"
+      />
+      <button type="submit" [disabled]="isLoading || !message?.trim()">Enviar</button>
+    </form>
+  </section>
+</div>
