@@ -18,6 +18,17 @@
 </div>
 
 <div class="container">
+    <div class="search-row">
+        <input
+            type="text"
+            class="search-input"
+            placeholder="Digite para buscar modelos"
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+        />
+        <button type="button" class="btn-buscar" (click)="onSearch()">Buscar</button>
+    </div>
+
     <h2>Lista de Modelos</h2>
     
     <div class="table-wrapper">

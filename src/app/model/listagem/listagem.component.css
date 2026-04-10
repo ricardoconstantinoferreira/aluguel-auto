@@ -4,6 +4,37 @@
 	text-align: center;
 }
 
+.search-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 12px;
+}
+
+.search-input {
+	width: 100%;
+	max-width: 300px;
+	padding: 8px 10px;
+	border: 1px solid #ccd6e0;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.btn-buscar {
+	padding: 8px 12px;
+	border: none;
+	border-radius: 4px;
+	background: #2F4F7F;
+	color: #fff;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.btn-buscar:hover {
+	filter: brightness(0.95);
+}
+
 .table-wrapper {
 	border: 1px solid #eee;
 	border-radius: 6px;

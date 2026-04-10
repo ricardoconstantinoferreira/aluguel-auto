@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ModelService } from 'src/app/model/model.service';
@@ -12,7 +12,7 @@ import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-alugar-carros',
-  imports: [CommonModule, ReactiveFormsModule, MatPaginator],
+  imports: [CommonModule, FormsModule, MatPaginator],
   templateUrl: './alugar-carros.component.html',
   styleUrl: './alugar-carros.component.css',
   providers: [{ provide: LOCALE_ID, useValue: 'pt-BR' }]
@@ -20,7 +20,9 @@ import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 export class AlugarCarrosComponent implements AfterViewInit {
 
   allData: any[] = [];
+  filteredData: any[] = [];
   pagedDate: any[] = [];
+  searchTerm = '';
   pageSize = 10;
   currentPage = 0;
   totalItems: number = 0; 
@@ -37,19 +39,57 @@ export class AlugarCarrosComponent implements AfterViewInit {
   ){}
 
   ngAfterViewInit(): void {
-    this.updatePagedData();
+    this.loadData();
     registerLocaleData(localePt);
   }
 
-  updatePagedData() {
-    const offset = this.currentPage * this.pageSize;
-    const limit = offset + this.pageSize;
-
+  loadData() {
     this.service.list().subscribe(data => {
       this.allData = data;
-      this.totalItems = this.allData.length;
-      this.pagedDate = this.allData.slice(offset, limit);
+      this.applyFilter(false);
     });
+  }
+
+  onSearch() {
+    this.applyFilter(true);
+  }
+
+  private applyFilter(resetPage: boolean) {
+    const term = this.searchTerm?.trim().toLowerCase() || '';
+
+    if (term) {
+      this.filteredData = this.allData.filter(item => {
+        const descricao = (item.description || item.descricao || '').toString().toLowerCase();
+        const ano = (item.year || item.ano || '').toString().toLowerCase();
+        const montadora = (item.descriptionCarmaker || '').toString().toLowerCase();
+        const categoria = (item.descriptionCategory || '').toString().toLowerCase();
+
+        return descricao.includes(term)
+          || ano.includes(term)
+          || montadora.includes(term)
+          || categoria.includes(term);
+      });
+    } else {
+      this.filteredData = [...this.allData];
+    }
+
+    if (resetPage) {
+      this.currentPage = 0;
+    }
+
+    this.updatePagedData();
+  }
+
+  updatePagedData() {
+    this.totalItems = this.filteredData.length;
+    const maxPageIndex = Math.max(0, Math.ceil(this.totalItems / this.pageSize) - 1);
+    if (this.currentPage > maxPageIndex) {
+      this.currentPage = maxPageIndex;
+    }
+
+    const offset = this.currentPage * this.pageSize;
+    const limit = offset + this.pageSize;
+    this.pagedDate = this.filteredData.slice(offset, limit);
   }
 
    onPageChange(event: PageEvent) {
@@ -61,7 +101,8 @@ export class AlugarCarrosComponent implements AfterViewInit {
   rent(item: any): void {
     let data = {
       modelId: item.id,
-      customerId: localStorage.getItem('customer_id')
+      customerId: localStorage.getItem('customer_id'),
+      qty: 0
     };
     
     const options = { headers: { 'Content-Type': 'application/json', 'Accept-Language': 'pt-BR' }, responseType: 'text' as 'json' }; 

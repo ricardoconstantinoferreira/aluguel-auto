@@ -3,19 +3,21 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ModelService } from '../model.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { resolveApiAssetUrl } from 'src/app/shared/api-url.util';
 
 @Component({
   selector: 'app-listagem',
-  imports: [CommonModule, ReactiveFormsModule, MatPaginator],
+  imports: [CommonModule, FormsModule, MatPaginator],
   templateUrl: './listagem.component.html',
   styleUrls: ['./listagem.component.css']
 })
 export class ListagemComponent implements AfterViewInit {
 
   allData: any[] = [];
+  filteredData: any[] = [];
   pagedDate: any[] = [];
+  searchTerm = '';
   pageSize = 5;
   currentPage = 0;
   totalItems: number = 0; 
@@ -30,18 +32,56 @@ export class ListagemComponent implements AfterViewInit {
   constructor(private service: ModelService, private router: Router) { }
 
   ngAfterViewInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.service.list().subscribe(data => {
+      this.allData = data;
+      this.applyFilter(false);
+    });
+  }
+
+  onSearch() {
+    this.applyFilter(true);
+  }
+
+  private applyFilter(resetPage: boolean) {
+    const term = this.searchTerm?.trim().toLowerCase() || '';
+
+    if (term) {
+      this.filteredData = this.allData.filter(item => {
+        const descricao = (item.description || item.descricao || '').toString().toLowerCase();
+        const ano = (item.year || item.ano || '').toString().toLowerCase();
+        const montadora = (item.descriptionCarmaker || '').toString().toLowerCase();
+        const categoria = (item.descriptionCategory || '').toString().toLowerCase();
+
+        return descricao.includes(term)
+          || ano.includes(term)
+          || montadora.includes(term)
+          || categoria.includes(term);
+      });
+    } else {
+      this.filteredData = [...this.allData];
+    }
+
+    if (resetPage) {
+      this.currentPage = 0;
+    }
+
     this.updatePagedData();
   }
 
   updatePagedData() {
+    this.totalItems = this.filteredData.length;
+    const maxPageIndex = Math.max(0, Math.ceil(this.totalItems / this.pageSize) - 1);
+    if (this.currentPage > maxPageIndex) {
+      this.currentPage = maxPageIndex;
+    }
+
     const offset = this.currentPage * this.pageSize;
     const limit = offset + this.pageSize;
-
-    this.service.list().subscribe(data => {
-      this.allData = data;
-      this.totalItems = this.allData.length;
-      this.pagedDate = this.allData.slice(offset, limit);
-    });
+    this.pagedDate = this.filteredData.slice(offset, limit);
   }
 
   onPageChange(event: PageEvent) {
@@ -76,7 +116,7 @@ export class ListagemComponent implements AfterViewInit {
     this.service.activate(item.id).subscribe({
       next: () => {
         this.openModal('Sucesso','Registro ativado com sucesso');
-        this.updatePagedData();
+        this.loadData();
       },
       error: err => this.openModal('Erro ao ativar', err?.error?.message || err?.message || 'Erro ao ativar registro')
     });
@@ -91,8 +131,7 @@ export class ListagemComponent implements AfterViewInit {
     this.service.inactivate(item.id).subscribe({
       next: () => {
         this.openModal('Sucesso', 'Registro inativado com sucesso');
-        this.adjustPageAfterInactivate();
-        this.updatePagedData();
+        this.loadData();
       },
       error: err => this.openModal('Erro ao inativar', err?.error?.message || err?.message || 'Erro ao inativar registro')
     });
@@ -111,14 +150,6 @@ export class ListagemComponent implements AfterViewInit {
     this.modalTitle = title;
     this.modalMessage = message;
     this.showModal = true;
-  }
-
-  private adjustPageAfterInactivate() {
-    const remainingItems = this.totalItems - 1;
-    const maxPageIndex = Math.max(0, Math.ceil(remainingItems / this.pageSize) - 1);
-    if (this.currentPage > maxPageIndex) {
-      this.currentPage = maxPageIndex;
-    }
   }
 
 }
