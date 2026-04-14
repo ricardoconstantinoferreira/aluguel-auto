@@ -1,0 +1,124 @@
+.dashboard-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 24px auto;
+  padding: 0 16px 24px;
+  box-sizing: border-box;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  color: #1f2a44;
+}
+
+.dashboard-header p {
+  margin: 8px 0 0;
+  color: #5c6578;
+}
+
+.dashboard-search,
+.dashboard-info,
+.dashboard-chart,
+.value-total {
+  margin-top: 24px;
+  background: #ffffff;
+  border: 1px solid #e6e8ef;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.dashboard-search h2,
+.dashboard-info h2,
+.dashboard-chart h2,
+.value-total h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  color: #1f2a44;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 200px;
+}
+
+.filter-group label {
+  font-size: 14px;
+  color: #2f3a55;
+  font-weight: 600;
+}
+
+.filter-group select {
+  height: 40px;
+  border: 1px solid #cfd5e4;
+  border-radius: 6px;
+  padding: 0 10px;
+  color: #2a3248;
+  background: #fff;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.info-card {
+  border: 1px solid #e6e8ef;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8f9fc;
+}
+
+.card-label {
+  margin: 0;
+  font-size: 13px;
+  color: #58607a;
+}
+
+.card-value {
+  margin: 8px 0 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2a44;
+}
+
+.chart-subtitle {
+  margin: 0 0 12px;
+  color: #5c6578;
+}
+
+.chart-wrapper {
+  height: 360px;
+}
+
+.chart-message {
+  margin: 0;
+  color: #5c6578;
+}
+
+.chart-message.error {
+  color: #b42318;
+}
+
+.value-total-subtitle {
+  margin: 0 0 12px;
+  color: #5c6578;
+}
+
+.value-wrapper {
+  border: 1px solid #e6e8ef;
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8f9fc;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2a44;
+}

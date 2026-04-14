@@ -56,10 +56,10 @@ export class CarBuyComponent implements OnInit {
     });
   }
 
-  sendOrder(allData) {
+  sendOrder(allData: any) {
     let data = {
       customerId: localStorage.getItem('customer_id'),
-      itemsDto: allData.map(item => ({
+      itemsDto: allData.map((item: any) => ({
         modelId: item.model.id
       }))
     };
