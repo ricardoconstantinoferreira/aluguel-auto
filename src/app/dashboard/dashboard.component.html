@@ -1,0 +1,87 @@
+<section class="dashboard-page">
+  <header class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Informacoes gerais do sistema.</p>
+  </header>
+
+  <section class="dashboard-search">
+    <h2>Busca</h2>
+    <div class="filters">
+      <div class="filter-group">
+        <label for="dashboard-month">Mes</label>
+        <select id="dashboard-month" [(ngModel)]="selectedMonth" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let month of months" [value]="month.value">
+            {{ month.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="dashboard-year">Ano</label>
+        <select id="dashboard-year" [(ngModel)]="selectedYear" (ngModelChange)="onFiltersChange()">
+          <option *ngFor="let year of years" [ngValue]="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-info">
+    <h2>Informacoes do Dashboard</h2>
+    <div class="info-grid">
+      <article class="info-card">
+        <p class="card-label">Periodo selecionado</p>
+        <p class="card-value">{{ selectedMonth }}/{{ selectedYear }}</p>
+      </article>
+      <article class="info-card">
+        <p class="card-label">Mes selecionado</p>
+        <p class="card-value">{{ selectedMonth }}</p>
+      </article>
+      <article class="info-card">
+        <p class="card-label">Ano selecionado</p>
+        <p class="card-value">{{ selectedYear }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="dashboard-chart">
+    <h2>Graficos</h2>
+    <p class="chart-subtitle">Quantidade de carros por mes e ano (grafico de pizza).</p>
+
+    <div class="chart-wrapper">
+      <canvas #vehiclesPieChart></canvas>
+    </div>
+
+    <p class="chart-message" *ngIf="loadingChart">Carregando grafico...</p>
+    <p class="chart-message error" *ngIf="chartError">{{ chartError }}</p>
+    <p class="chart-message" *ngIf="!loadingChart && !chartError && !hasChartData">
+      Nenhum dado encontrado para o periodo selecionado.
+    </p>
+  </section>
+
+  <section class="dashboard-chart">
+    <h2>Grafico de Clientes</h2>
+    <p class="chart-subtitle">Quantidade de clientes por mes e ano (grafico de pizza).</p>
+
+    <div class="chart-wrapper">
+      <canvas #customersPieChart></canvas>
+    </div>
+
+    <p class="chart-message" *ngIf="loadingCustomerChart">Carregando grafico de clientes...</p>
+    <p class="chart-message error" *ngIf="customerChartError">{{ customerChartError }}</p>
+    <p class="chart-message" *ngIf="!loadingCustomerChart && !customerChartError && !hasCustomerChartData">
+      Nenhum dado de clientes encontrado para o periodo selecionado.
+    </p>
+  </section>
+
+  <section class="value-total">
+    <h2>Valor Total Lucro</h2>
+    <p class="value-total-subtitle">Valor total em lucro de receita</p>
+
+    <div class="value-wrapper">{{ (valueTotal ?? 0) | currency:'BRL':'symbol':'1.2-2' }}</div>
+
+  </section>
+
+  
+</section>

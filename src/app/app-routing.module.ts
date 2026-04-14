@@ -17,6 +17,11 @@ const routes: Routes = [
     path: 'reset-password', 
     loadChildren: () => import('./auth/reset-password.module').then(m => m.ResetPasswordModule) 
   },
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [AuthGuard]
+  },
   { 
     path: 'carmaker', 
     loadChildren: () => import('./carmaker/carmaker.module').then(m => m.CarmakerModule) ,
