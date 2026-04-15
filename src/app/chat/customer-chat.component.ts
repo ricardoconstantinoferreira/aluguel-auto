@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { ChatApiResponse, ChatService } from './chat.service';
 
 interface ChatMessage {
@@ -42,7 +43,7 @@ export class CustomerChatComponent {
     this.message = '';
     this.isLoading = true;
 
-    this.chatService.sendMessage(content).subscribe({
+    this.resolveApiCall(content).subscribe({
       next: (response) => {
         this.messages.push({ author: 'bot', text: response.message });
         this.isLoading = false;
@@ -55,5 +56,30 @@ export class CustomerChatComponent {
         this.isLoading = false;
       }
     });
+  }
+
+  private resolveApiCall(message: string): Observable<ChatApiResponse> {
+    if (this.isRentIntent(message)) {
+      return this.chatService.rent(message);
+    }
+
+    return this.chatService.ask(message);
+  }
+
+  private isRentIntent(message: string): boolean {
+    const normalizedMessage = (message || '').toLowerCase();
+    const rentKeywords = [
+      'alugar',
+      'aluguel',
+      'locar',
+      'locacao',
+      'reservar',
+      'reserva',
+      'fechar locacao',
+      'quero esse carro',
+      'quero alugar'
+    ];
+
+    return rentKeywords.some((keyword) => normalizedMessage.includes(keyword));
   }
 }

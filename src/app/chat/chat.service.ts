@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 export interface ChatApiResponse {
   message: string;
@@ -8,17 +8,24 @@ export interface ChatApiResponse {
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-  private readonly uri = 'api/auto/assistent';
+  private readonly uriAsk = 'api/auto/assistent/ask';
+  private readonly uriRent = 'api/auto/assistent/rent';
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: string): Observable<ChatApiResponse> {
-    let data = {
+  ask(message: string): Observable<ChatApiResponse> {
+    const data = {
       message
     };
 
-    return this.http.post<any>(this.uri, data);
+    return this.http.post<ChatApiResponse>(this.uriAsk, data);
   }
 
-  
+  rent(message: string): Observable<ChatApiResponse> {
+    const data = {
+      message
+    };
+
+    return this.http.post<ChatApiResponse>(this.uriRent, data);
+  }
 }
