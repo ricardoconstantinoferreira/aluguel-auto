@@ -392,6 +392,13 @@
         <a class="nav-link" routerLink="/dashboard" title="Dashboard">Dashboard</a>
       </li>
 
+      <li class="nav-item dropdown" *ngIf="authService.isLoggedIn && authService.isAdmin">
+        <p class="nav-link">Despesas ▾</p>
+        <ul class="dropdown-menu" role="menu">
+          <li role="none"><a role="menuitem" routerLink="/despesas/tipo-despesas">Tipo de despesas</a></li>
+        </ul>
+      </li>
+
       <li class="nav-item" *ngIf="!authService.isLoggedIn">
         <a class="nav-link" routerLink="/login" title="Logar">Logar</a>
       </li>
