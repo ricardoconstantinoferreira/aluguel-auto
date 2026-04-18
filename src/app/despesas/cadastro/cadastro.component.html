@@ -1,1 +1,46 @@
-<p>cadastro works!</p>
+<div class="cadastro-container">
+  <h2>Cadastro de Modelo</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="hidden" formControlName="id" />
+
+    <div class="field">
+      <label for="type_expenses">Tipo Despesas</label>
+      <select id="type_expenses" formControlName="typeExpensesId">
+        <option [ngValue]="null" disabled>Selecione</option>
+        <option *ngFor="let c of type_expenses" [ngValue]="c.id">{{ c.description || c.descricao }}</option>
+      </select>
+      <small *ngIf="form.get('carmakerId')?.invalid && form.get('carmakerId')?.touched">Selecione o tipo de despesas</small>
+    </div>
+
+    <div class="field">
+      <label for="model">Modelo</label>
+      <select id="model" formControlName="modelId">
+        <option [ngValue]="null" disabled>Selecione</option>
+        <option *ngFor="let c of models" [ngValue]="c.id">{{ c.description || c.descricao }}</option>
+      </select>
+      <small *ngIf="form.get('categoriaId')?.invalid && form.get('categoriaId')?.touched">Selecione o modelo</small>
+    </div>
+
+    <div class="field">
+      <label for="value">Valor da despesa</label>
+      <input id="value" formControlName="value" inputmode="decimal" (input)="onPriceInput($event)" />
+      <small *ngIf="form.get('value')?.invalid && form.get('value')?.touched">Valor da despesa é obrigatório</small>
+    </div>
+
+
+    <div class="actions">
+      <button type="submit">Salvar</button>
+    </div>
+  </form>
+</div>
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>{{ modalTitle }}</h3>
+    <p>{{ modalMessage }}</p>
+    <button type="button" (click)="closeModal()">Fechar</button>
+  </div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{ backdrop: true, primaryColour: '#2F4F7F', secondaryColour: '#000000', tertiaryColour: '#ffffff' }"></ngx-loading>
