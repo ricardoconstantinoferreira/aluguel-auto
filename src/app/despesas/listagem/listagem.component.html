@@ -1,1 +1,74 @@
-<p>listagem works!</p>
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+	<div class="modal-box" (click)="$event.stopPropagation()">
+		<h3>{{ modalTitle }}</h3>
+		<p>{{ modalMessage }}</p>
+		<button type="button" (click)="closeModal()">Fechar</button>
+	</div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showDeleteConfirmModal" (click)="closeDeleteConfirmModal()">
+	<div class="modal-box" (click)="$event.stopPropagation()">
+		<h3>Confirmar exclusao</h3>
+		<p>Deseja realmente deletar esta despesa?</p>
+		<div class="modal-actions">
+			<button type="button" class="btn-modal-cancel" (click)="closeDeleteConfirmModal()">Cancelar</button>
+			<button type="button" class="btn-modal-delete" (click)="confirmDelete()">Deletar</button>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<h2>Listagem de Despesas</h2>
+
+	<div class="filter-row">
+		<label for="expenseTypeFilter">Buscar por tipo de despesa</label>
+		<select
+			id="expenseTypeFilter"
+			[ngModel]="selectedTypeExpenseId === null ? '' : selectedTypeExpenseId"
+			(ngModelChange)="onTypeChange($event)">
+			<option value="">Todos</option>
+			<option *ngFor="let type of typeExpenses" [value]="type.id">
+				{{ type.description || type.descricao }}
+			</option>
+		</select>
+	</div>
+
+	<div class="table-wrapper">
+		<table class="despesa-table">
+			<thead>
+				<tr>
+					<th>Tipo de despesa</th>
+					<th>Nome do modelo</th>
+					<th>Foto do modelo</th>
+					<th>Valor da despesa</th>
+					<th class="actions-header">Acoes</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (item of filteredData; track item.id) {
+					<tr>
+						<td>{{ getExpenseTypeName(item) }}</td>
+						<td>{{ getModelName(item) }}</td>
+						<td>
+							<img
+								class="model-image"
+								[src]="resolveImageUrl(getModelImage(item))"
+								alt="Foto do modelo"
+							/>
+						</td>
+						<td>{{ formatValue(item?.value) }}</td>
+						<td class="actions-column">
+							<button type="button" class="btn-deletar" (click)="onDelete(item)">Deletar</button>
+						</td>
+					</tr>
+				} @empty {
+					<tr>
+						<td colspan="5" class="empty-row">Nenhuma despesa encontrada para o filtro selecionado.</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<ngx-loading [show]="loading" [config]="{ backdrop: true, primaryColour: '#2F4F7F', secondaryColour: '#000000', tertiaryColour: '#ffffff' }"></ngx-loading>
